@@ -7,56 +7,17 @@
             content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=yes"
         />
 
-        <!-- PWA Manifest & Icons -->
-        <link
-            rel="manifest"
-            href="data:application/manifest+json,{
-    %22name%22: %22Pillowy Reminders%22,
-    %22short_name%22: %22Pillowy%22,
-    %22description%22: %22Cozy reminders & focus timer with pastel glass design%22,
-    %22theme_color%22: %22%23fbc4d2%22,
-    %22background_color%22: %22%23ffe4ec%22,
-    %22display%22: %22standalone%22,
-    %22orientation%22: %22portrait%22,
-    %22scope%22: %22/%22,
-    %22start_url%22: %22/%22,
-    %22icons%22: [
-      {
-        %22src%22: %22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffe4ec'/%3E%3Cstop offset='100%25' stop-color='%23fbc4d2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='96' fill='url(%23bg)'/%3E%3Ccircle cx='200' cy='180' r='45' fill='%23e36b5e' opacity='0.8'/%3E%3Ccircle cx='312' cy='180' r='45' fill='%23e36b5e' opacity='0.8'/%3E%3Cpath d='M200 310 Q256 380 312 310' stroke='%23ffffff' stroke-width='12' fill='none' stroke-linecap='round' opacity='0.9'/%3E%3Ctext x='256' y='440' font-size='70' font-family='system-ui' font-weight='bold' fill='%23ffffff' text-anchor='middle' opacity='0.9'%3E🌸%3C/text%3E%3C/svg%3E%22,
-        %22sizes%22: %22512x512%22,
-        %22type%22: %22image/svg+xml%22,
-        %22purpose%22: %22any maskable%22
-      },
-      {
-        %22src%22: %22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffe4ec'/%3E%3Cstop offset='100%25' stop-color='%23fbc4d2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='192' height='192' rx='36' fill='url(%23bg)'/%3E%3Ccircle cx='72' cy='68' r='18' fill='%23e36b5e' opacity='0.8'/%3E%3Ccircle cx='120' cy='68' r='18' fill='%23e36b5e' opacity='0.8'/%3E%3Cpath d='M72 120 Q96 145 120 120' stroke='%23ffffff' stroke-width='5' fill='none' stroke-linecap='round' opacity='0.9'/%3E%3Ctext x='96' y='168' font-size='30' font-family='system-ui' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3E🌸%3C/text%3E%3C/svg%3E%22,
-        %22sizes%22: %22192x192%22,
-        %22type%22: %22image/svg+xml%22,
-        %22purpose%22: %22any maskable%22
-      }
-    ]
-  }"
-        />
+        <!-- Apple Touch Icon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+        <link rel="manifest" href="/manifest.json" />
 
-        <!-- Apple Touch Icon (iOS) -->
-        <link
-            rel="apple-touch-icon"
-            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffe4ec'/%3E%3Cstop offset='100%25' stop-color='%23fbc4d2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='34' fill='url(%23bg)'/%3E%3Ccircle cx='68' cy='64' r='16' fill='%23e36b5e' opacity='0.8'/%3E%3Ccircle cx='112' cy='64' r='16' fill='%23e36b5e' opacity='0.8'/%3E%3Cpath d='M68 112 Q90 136 112 112' stroke='%23ffffff' stroke-width='4.5' fill='none' stroke-linecap='round' opacity='0.9'/%3E%3Ctext x='90' y='158' font-size='28' font-family='system-ui' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3E🌸%3C/text%3E%3C/svg%3E"
-        />
-
-        <!-- Apple Meta Tags for Standalone Mode -->
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta
-            name="apple-mobile-web-app-status-bar-style"
-            content="black-translucent"
-        />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Pillowy" />
-
-        <!-- Theme Color -->
         <meta name="theme-color" content="#fbc4d2" />
 
-        <title>
-            Pillowy Reminders • Glass Pastel • Pro Timer & Custom Noti
-        </title>
+        <title>Pillowy • Offline Reminders</title>
 
         <style>
             * {
@@ -69,20 +30,106 @@
             body {
                 min-height: 100vh;
                 background: linear-gradient(145deg, #ffe4ec 0%, #fbc4d2 100%);
-                font-family:
-                    system-ui,
-                    -apple-system,
-                    "Segoe UI",
-                    "SF Pro Text",
-                    "Inter",
-                    Helvetica,
-                    sans-serif;
+                font-family: system-ui, -apple-system, "Segoe UI", "SF Pro Text", sans-serif;
                 padding: 20px 16px 32px;
                 color: #3a2c28;
                 position: relative;
             }
 
-            /* floating glass orbs */
+            /* Offline Banner */
+            .offline-banner {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: rgba(227, 107, 94, 0.95);
+                color: white;
+                text-align: center;
+                padding: 12px;
+                font-size: 14px;
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                transform: translateY(-100%);
+                transition: transform 0.3s;
+                font-weight: 600;
+            }
+
+            .offline-banner.show {
+                transform: translateY(0);
+            }
+
+            /* In-App Notification (Offline Alert) */
+            .inapp-notification {
+                position: fixed;
+                top: 60px;
+                left: 20px;
+                right: 20px;
+                background: rgba(255, 250, 245, 0.95);
+                backdrop-filter: blur(20px);
+                border-radius: 20px;
+                padding: 16px 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                border: 1px solid rgba(227, 107, 94, 0.3);
+                z-index: 999;
+                transform: translateY(-150%);
+                transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .inapp-notification.show {
+                transform: translateY(0);
+            }
+
+            .inapp-notification-icon {
+                font-size: 32px;
+            }
+
+            .inapp-notification-content {
+                flex: 1;
+            }
+
+            .inapp-notification-title {
+                font-weight: 700;
+                color: #e36b5e;
+                margin-bottom: 4px;
+            }
+
+            .inapp-notification-body {
+                font-size: 14px;
+                color: #5a3e36;
+            }
+
+            .inapp-notification-close {
+                background: none;
+                border: none;
+                font-size: 20px;
+                cursor: pointer;
+                color: #999;
+                padding: 5px;
+            }
+
+            /* Pending Notifications Badge */
+            .pending-badge {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background: #e36b5e;
+                color: white;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+            }
+
+            /* Copy toàn bộ CSS gốc của bạn */
+            /* ... (giữ nguyên toàn bộ CSS cũ) ... */
+            
             body::before {
                 content: "";
                 position: fixed;
@@ -100,6 +147,7 @@
                 z-index: 0;
                 animation: floatOrb 16s infinite alternate;
             }
+            
             body::after {
                 content: "";
                 position: fixed;
@@ -119,24 +167,13 @@
             }
 
             @keyframes floatOrb {
-                0% {
-                    transform: translate(0, 0) scale(1);
-                    opacity: 0.5;
-                }
-                100% {
-                    transform: translate(40px, 35px) scale(1.2);
-                    opacity: 0.8;
-                }
+                0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+                100% { transform: translate(40px, 35px) scale(1.2); opacity: 0.8; }
             }
+            
             @keyframes floatOrb2 {
-                0% {
-                    transform: translate(0, 0) scale(1);
-                    opacity: 0.4;
-                }
-                100% {
-                    transform: translate(-30px, -40px) scale(1.3);
-                    opacity: 0.7;
-                }
+                0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+                100% { transform: translate(-30px, -40px) scale(1.3); opacity: 0.7; }
             }
 
             .app-container {
@@ -146,9 +183,7 @@
                 backdrop-filter: blur(18px) saturate(180%);
                 -webkit-backdrop-filter: blur(18px);
                 border-radius: 56px;
-                box-shadow:
-                    0 20px 40px rgba(0, 0, 0, 0.08),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
                 overflow: hidden;
                 padding-bottom: 12px;
                 border: 1px solid rgba(255, 255, 255, 0.5);
@@ -166,8 +201,24 @@
                 background: rgba(255, 240, 240, 0.3);
                 backdrop-filter: blur(4px);
                 border-bottom: 1px solid rgba(255, 215, 215, 0.5);
+                position: relative;
             }
 
+            .pending-notification-badge {
+                background: #e36b5e;
+                color: white;
+                border-radius: 50%;
+                width: 22px;
+                height: 22px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                margin-left: 8px;
+            }
+
+            /* Các style còn lại giữ nguyên */
             .tab-bar {
                 display: flex;
                 justify-content: space-around;
@@ -227,19 +278,13 @@
                 }
             }
 
-            /* glass cards */
-            .streak-card,
-            .focus-card,
-            .reminder-card,
-            .glass-panel {
+            .streak-card, .focus-card, .reminder-card, .glass-panel {
                 background: rgba(255, 250, 245, 0.55);
                 backdrop-filter: blur(12px);
                 border-radius: 40px;
                 padding: 20px 18px;
                 margin-bottom: 20px;
-                box-shadow:
-                    0 8px 20px rgba(0, 0, 0, 0.05),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.7);
                 border: 1px solid rgba(255, 255, 255, 0.5);
             }
 
@@ -305,7 +350,6 @@
                 color: white;
             }
 
-            /* timer preset buttons */
             .preset-group {
                 display: flex;
                 gap: 12px;
@@ -313,6 +357,7 @@
                 margin: 16px 0;
                 flex-wrap: wrap;
             }
+
             .preset-btn {
                 background: rgba(245, 220, 210, 0.8);
                 backdrop-filter: blur(4px);
@@ -325,10 +370,12 @@
                 cursor: pointer;
                 transition: all 0.2s ease;
             }
+
             .preset-btn.active-preset {
                 background: #e36b5e;
                 color: white;
             }
+
             .preset-btn:active {
                 transform: scale(0.96);
             }
@@ -353,8 +400,7 @@
                 font-weight: 500;
             }
 
-            input,
-            textarea {
+            input, textarea {
                 background: rgba(255, 245, 240, 0.8);
                 backdrop-filter: blur(8px);
                 border: 1px solid rgba(255, 215, 200, 0.8);
@@ -383,12 +429,9 @@
                 cursor: pointer;
                 transition: 0.2s;
             }
+
             button:active {
                 transform: scale(0.96);
-            }
-            button:disabled {
-                opacity: 0.5;
-                pointer-events: none;
             }
 
             .btn-outline {
@@ -427,9 +470,6 @@
                 opacity: 0.7;
                 transition: opacity 0.2s;
             }
-            .view-all-link:hover {
-                opacity: 1;
-            }
 
             .badge-progress-container {
                 background: rgba(255, 240, 235, 0.5);
@@ -438,272 +478,52 @@
                 margin-top: 12px;
                 text-align: center;
             }
-
-            /* Browser Warning Styles */
-            .browser-warning-card {
-                background: rgba(255, 200, 150, 0.9);
-                backdrop-filter: blur(8px);
-                border-radius: 32px;
-                padding: 20px;
-                margin: 16px 0;
-                border: 2px solid #ff8a5c;
-                color: #4a2e26;
-                text-align: center;
-            }
-
-            .browser-warning-card h3 {
-                color: #c0392b;
-                margin-bottom: 12px;
-                font-size: 20px;
-            }
-
-            .browser-icon {
-                font-size: 40px;
-                margin: 8px 0;
-            }
-
-            .open-in-safari-btn {
-                background: #007aff !important;
-                color: white !important;
-                width: 100%;
-                padding: 16px;
-                font-size: 18px;
-                margin-top: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
-
-            .open-in-safari-btn:disabled {
-                opacity: 1 !important;
-                pointer-events: all !important;
-            }
-
-            .safari-icon {
-                font-size: 24px;
-            }
-
-            .dismiss-warning {
-                background: transparent !important;
-                color: #666 !important;
-                margin-top: 8px;
-                font-size: 14px;
-            }
-
-            /* iOS Guide Styles */
-            .ios-guide-card {
-                background: rgba(255, 235, 225, 0.9);
-                backdrop-filter: blur(8px);
-                border-radius: 32px;
-                padding: 16px 20px;
-                margin: 16px 0;
-                border: 1px solid rgba(227, 107, 94, 0.3);
-                font-size: 14px;
-                color: #4a2e26;
-            }
-
-            .ios-guide-card strong {
-                color: #e36b5e;
-            }
-
-            .modal-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.2);
-                backdrop-filter: blur(4px);
-                z-index: 1000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.2s;
-                padding: 20px;
-            }
-
-            .modal-overlay.show {
-                opacity: 1;
-                pointer-events: all;
-            }
-
-            .modal-card {
-                max-width: 380px;
-                background: rgba(255, 250, 245, 0.95);
-                backdrop-filter: blur(20px);
-                border-radius: 48px;
-                padding: 24px;
-                text-align: center;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-                border: 1px solid rgba(255, 255, 255, 0.8);
-            }
-
-            .modal-card p {
-                margin: 16px 0;
-                font-size: 16px;
-            }
-
-            .modal-actions {
-                display: flex;
-                gap: 12px;
-                justify-content: center;
-            }
-
-            .modal-actions button {
-                flex: 1;
-                padding: 12px;
-            }
-
-            /* iOS Install Guide Modal (Visual) */
-            .install-steps {
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-                margin: 20px 0;
-            }
-
-            .step-item {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                text-align: left;
-                background: rgba(255, 240, 235, 0.5);
-                padding: 12px 16px;
-                border-radius: 24px;
-            }
-
-            .step-icon {
-                background: #e36b5e;
-                color: white;
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                font-size: 16px;
-                flex-shrink: 0;
-            }
-
-            .step-text {
-                flex: 1;
-                font-size: 14px;
-                font-weight: 500;
-            }
-
-            .guide-button-group {
-                display: flex;
-                gap: 8px;
-                margin-top: 16px;
-            }
         </style>
     </head>
     <body>
-        <!-- Custom Modal for Confirm Dialogs -->
-        <div class="modal-overlay" id="confirmModal">
-            <div class="modal-card">
-                <div style="font-size: 40px">🧸</div>
-                <p id="confirmModalMessage">Are you sure?</p>
-                <div class="modal-actions">
-                    <button class="btn-outline" id="confirmModalCancel">
-                        Cancel
-                    </button>
-                    <button id="confirmModalOk">OK</button>
-                </div>
-            </div>
+        <!-- Offline Banner -->
+        <div class="offline-banner" id="offlineBanner">
+            📡 You're offline • Reminders will show in-app
         </div>
 
-        <!-- iOS Install Guide Modal (Visual Step-by-step) -->
-        <div class="modal-overlay" id="installGuideModal">
-            <div class="modal-card">
-                <div style="font-size: 48px">📲</div>
-                <h3 style="margin: 8px 0; color: #e36b5e">
-                    Add Pillowy to Home Screen
-                </h3>
-                <div class="install-steps">
-                    <div class="step-item">
-                        <div class="step-icon">1</div>
-                        <div class="step-text">
-                            Open this page in
-                            <strong style="color: #007aff">Safari</strong> (not
-                            Edge/Chrome)
-                        </div>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-icon">2</div>
-                        <div class="step-text">
-                            Tap the
-                            <strong
-                                style="
-                                    background: #007aff;
-                                    color: white;
-                                    padding: 2px 8px;
-                                    border-radius: 16px;
-                                "
-                                >Share</strong
-                            >
-                            button 📤
-                        </div>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-icon">3</div>
-                        <div class="step-text">
-                            Scroll down and tap
-                            <strong>"Add to Home Screen"</strong> ➕
-                        </div>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-icon">4</div>
-                        <div class="step-text">
-                            Tap <strong>"Add"</strong> → Open from home screen
-                            ✨
-                        </div>
-                    </div>
-                </div>
-                <div class="guide-button-group">
-                    <button id="closeGuideModal" style="flex: 1">
-                        Got it!
-                    </button>
-                </div>
+        <!-- In-App Notification (Offline Alert) -->
+        <div class="inapp-notification" id="inappNotification">
+            <div class="inapp-notification-icon">🔔</div>
+            <div class="inapp-notification-content">
+                <div class="inapp-notification-title" id="inappTitle">Reminder</div>
+                <div class="inapp-notification-body" id="inappBody">Time to take a break!</div>
             </div>
+            <button class="inapp-notification-close" id="closeInappNotification">✕</button>
         </div>
 
         <div class="app-container">
             <div class="status-bar">
-                <span>✨ Pillowy</span><span>🔔 🌸</span>
+                <span>✨ Pillowy</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span id="pendingCount" style="display: none;">
+                        <span class="pending-notification-badge" id="pendingBadge">0</span>
+                    </span>
+                    <span>🌸</span>
+                </div>
             </div>
 
-            <!-- HOME: Streak + today reminders -->
+            <!-- HOME Page -->
             <div id="homePage" class="page active-page">
-                <!-- Browser Warning for non-Safari iOS -->
-                <div
-                    class="browser-warning-card"
-                    id="browserWarningCard"
-                    style="display: none"
-                >
-                    <div class="browser-icon" id="browserIcon">⚠️</div>
-                    <h3 id="warningTitle">Safari Required</h3>
-                    <p id="warningMessage">
-                        You're using a browser that doesn't support
-                        notifications or "Add to Home Screen" on iOS.
-                    </p>
-                    <button class="open-in-safari-btn" id="openInSafariBtn">
-                        <span class="safari-icon">🧭</span> Open in Safari
-                    </button>
-                    <button class="dismiss-warning" id="dismissWarningBtn">
-                        Dismiss (features won't work)
-                    </button>
-                </div>
-
                 <div class="streak-card">
                     <div>🌸 CURRENT STREAK 🌸</div>
                     <div class="streak-number" id="streakValue">1</div>
                     <div>Days of being amazing!</div>
                 </div>
+                
+                <!-- Pending Notifications Card (only shows when offline reminders exist) -->
+                <div id="pendingRemindersCard" class="reminder-card" style="display: none; background: rgba(227, 107, 94, 0.15);">
+                    <div>
+                        <div>📬 Pending Reminders</div>
+                        <div id="pendingRemindersList">No pending reminders</div>
+                    </div>
+                    <button id="sendPendingBtn" class="btn-outline" style="padding: 8px 16px;">Send Now</button>
+                </div>
+
                 <div class="section-title">
                     <span>💨 Today's Puffs</span>
                     <span class="view-all-link" id="viewAllLink">VIEW ALL</span>
@@ -723,101 +543,43 @@
                     <div class="reminder-time">12:00 PM</div>
                 </div>
 
-                <!-- iOS Add to Home Screen Guide (only shown on iOS Safari) -->
-                <div
-                    class="ios-guide-card"
-                    id="iosGuideCard"
-                    style="display: none"
-                >
-                    <div
-                        style="
-                            display: flex;
-                            align-items: center;
-                            gap: 8px;
-                            margin-bottom: 8px;
-                        "
-                    >
-                        <span style="font-size: 24px">📲</span>
-                        <strong>iOS Notification Setup</strong>
-                    </div>
-                    <p style="margin-bottom: 12px">
-                        To get reminders, add Pillowy to your home screen:
-                    </p>
-                    <button
-                        id="showDetailedGuideBtn"
-                        style="width: 100%; background: #e36b5e; padding: 10px"
-                    >
-                        📖 Show step-by-step guide
-                    </button>
-                </div>
-
                 <div>
                     <button id="testNotifBtn" style="width: 100%">
-                        🔔 Test notification
+                        🔔 Test notification (works offline too!)
                     </button>
                 </div>
-                <div
-                    id="notifyStatus"
-                    class="notification-perm"
-                    style="margin-top: 12px"
-                >
+                <div id="notifyStatus" class="notification-perm" style="margin-top: 12px">
                     <span>🔕 Notifications:</span>
                     <span id="permBadge">⚠️ Not allowed</span>
-                    <button id="requestPermBtn" style="background: #b1826e">
-                        Enable
-                    </button>
+                    <button id="requestPermBtn" style="background: #b1826e">Enable</button>
                 </div>
             </div>
 
-            <!-- FOCUS TIMER with presets 25min, 1h, 2h -->
+            <!-- FOCUS Page -->
             <div id="focusPage" class="page">
                 <div style="text-align: center; margin-bottom: 12px">
-                    <span
-                        style="
-                            background: rgba(255, 230, 220, 0.6);
-                            padding: 6px 16px;
-                            border-radius: 40px;
-                        "
-                        >🧘 FOCUS SESSION</span
-                    >
+                    <span style="background: rgba(255, 230, 220, 0.6); padding: 6px 16px; border-radius: 40px;">🧘 FOCUS SESSION</span>
                 </div>
                 <div class="focus-card">
                     <h2>Deep Dreaming</h2>
                     <div class="preset-group">
-                        <button class="preset-btn" data-minutes="25">
-                            25 min
-                        </button>
-                        <button class="preset-btn" data-minutes="60">
-                            1 hour
-                        </button>
-                        <button class="preset-btn" data-minutes="120">
-                            2 hours
-                        </button>
+                        <button class="preset-btn" data-minutes="25">25 min</button>
+                        <button class="preset-btn" data-minutes="60">1 hour</button>
+                        <button class="preset-btn" data-minutes="120">2 hours</button>
                     </div>
                     <div class="timer-display" id="timerDisplay">25:00</div>
-                    <div class="marshie-message">
-                        🐻‍❄️ Marshie is having a cozy nap...
-                    </div>
-                    <div
-                        style="
-                            display: flex;
-                            gap: 12px;
-                            justify-content: center;
-                            margin-top: 8px;
-                        "
-                    >
+                    <div class="marshie-message">🐻‍❄️ Marshie is having a cozy nap...</div>
+                    <div style="display: flex; gap: 12px; justify-content: center; margin-top: 8px;">
                         <button id="startTimerBtn">▶ Start</button>
-                        <button id="resetTimerBtn" class="btn-outline">
-                            ⟳ Reset
-                        </button>
+                        <button id="resetTimerBtn" class="btn-outline">⟳ Reset</button>
                     </div>
                 </div>
                 <div class="notification-perm" style="justify-content: center">
-                    <span>✨ timer will notify you when focus ends ✨</span>
+                    <span>✨ timer works offline • notification shows in-app</span>
                 </div>
             </div>
 
-            <!-- REWARDS + STREAK CALENDAR -->
+            <!-- REWARDS Page -->
             <div id="rewardsPage" class="page">
                 <div class="streak-card">
                     <div><strong>CURRENT STREAK</strong></div>
@@ -836,96 +598,256 @@
                     </button>
                 </div>
                 <div style="margin-top: 12px">
-                    <button
-                        id="resetStreakBtn"
-                        class="btn-outline"
-                        style="width: 100%"
-                    >
+                    <button id="resetStreakBtn" class="btn-outline" style="width: 100%">
                         🔄 Reset Streak (Testing)
                     </button>
                 </div>
             </div>
 
-            <!-- SET: custom reminder -->
+            <!-- SET Page -->
             <div id="snoozePage" class="page">
                 <div class="glass-panel">
-                    <div style="font-size: 20px; margin-bottom: 12px">
-                        ⏰ Custom Reminder
-                    </div>
+                    <div style="font-size: 20px; margin-bottom: 12px">⏰ Custom Reminder</div>
                     <label style="font-weight: 500">Hour (24h format)</label>
-                    <input
-                        type="number"
-                        id="customHour"
-                        placeholder="14"
-                        min="0"
-                        max="23"
-                        value="20"
-                        style="margin-bottom: 12px"
-                    />
+                    <input type="number" id="customHour" placeholder="14" min="0" max="23" value="20" style="margin-bottom: 12px" />
                     <label style="font-weight: 500">Minute</label>
-                    <input
-                        type="number"
-                        id="customMinute"
-                        placeholder="30"
-                        min="0"
-                        max="59"
-                        value="30"
-                        style="margin-bottom: 12px"
-                    />
-                    <label style="font-weight: 500"
-                        >Notification content (max 100 chars)</label
-                    >
-                    <textarea
-                        id="customNotiText"
-                        rows="2"
-                        maxlength="100"
-                        placeholder="e.g., Time to take your vitamins 🌟"
-                    >
-Pillowy nudge: stay mindful ✨</textarea
-                    >
-                    <div
-                        style="font-size: 12px; color: #9b6b5e; margin-top: 4px"
-                        id="charCount"
-                    >
-                        0/100
-                    </div>
-                    <button
-                        id="scheduleCustomNudgeBtn"
-                        style="margin-top: 16px; width: 100%"
-                    >
-                        Set custom reminder & notify
+                    <input type="number" id="customMinute" placeholder="30" min="0" max="59" value="30" style="margin-bottom: 12px" />
+                    <label style="font-weight: 500">Notification content</label>
+                    <textarea id="customNotiText" rows="2" maxlength="100">Pillowy nudge: stay mindful ✨</textarea>
+                    <div style="font-size: 12px; color: #9b6b5e; margin-top: 4px" id="charCount">0/100</div>
+                    
+                    <!-- Repeat option -->
+                    <label style="font-weight: 500; margin-top: 12px; display: block;">Repeat (optional)</label>
+                    <select id="repeatOption" style="width: 100%; padding: 12px; border-radius: 44px; background: rgba(255,245,240,0.8); border: 1px solid rgba(255,215,200,0.8); margin-bottom: 12px;">
+                        <option value="none">No repeat</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                    </select>
+                    
+                    <button id="scheduleCustomNudgeBtn" style="margin-top: 16px; width: 100%">
+                        Set reminder (works offline!)
                     </button>
-                    <div
-                        style="margin-top: 12px; font-size: 13px; opacity: 0.8"
-                    >
-                        💡 Reminder will trigger at specified time (next
-                        occurrence if passed)
+                    <div style="margin-top: 12px; font-size: 13px; opacity: 0.8">
+                        💡 Offline: Shows in-app • Online: Sends notification
                     </div>
                 </div>
             </div>
 
             <div class="tab-bar">
-                <button class="tab-item" data-page="homePage">
-                    <span class="tab-icon">🏠</span><span>TODAY</span>
-                </button>
-                <button class="tab-item" data-page="focusPage">
-                    <span class="tab-icon">⏱️</span><span>TIMER</span>
-                </button>
-                <button class="tab-item" data-page="rewardsPage">
-                    <span class="tab-icon">🎁</span><span>REWARDS</span>
-                </button>
-                <button class="tab-item" data-page="snoozePage">
-                    <span class="tab-icon">😴</span><span>SET</span>
-                </button>
+                <button class="tab-item active" data-page="homePage"><span class="tab-icon">🏠</span><span>TODAY</span></button>
+                <button class="tab-item" data-page="focusPage"><span class="tab-icon">⏱️</span><span>TIMER</span></button>
+                <button class="tab-item" data-page="rewardsPage"><span class="tab-icon">🎁</span><span>REWARDS</span></button>
+                <button class="tab-item" data-page="snoozePage"><span class="tab-icon">😴</span><span>SET</span></button>
             </div>
         </div>
+
         <div id="toastMessage" class="toast-msg" style="opacity: 0">✨</div>
 
         <script>
             (function () {
                 "use strict";
 
-                // ----------------------- STATE -----------------------
+                // ===== OFFLINE NOTIFICATION SYSTEM =====
+                class OfflineNotificationManager {
+                    constructor() {
+                        this.pendingNotifications = this.loadPending();
+                        this.inappEl = document.getElementById('inappNotification');
+                        this.inappTitle = document.getElementById('inappTitle');
+                        this.inappBody = document.getElementById('inappBody');
+                        this.pendingBadge = document.getElementById('pendingBadge');
+                        this.pendingCount = document.getElementById('pendingCount');
+                        this.pendingCard = document.getElementById('pendingRemindersCard');
+                        this.pendingList = document.getElementById('pendingRemindersList');
+                        
+                        this.init();
+                    }
+
+                    init() {
+                        // Close in-app notification
+                        document.getElementById('closeInappNotification')?.addEventListener('click', () => {
+                            this.hideInAppNotification();
+                        });
+
+                        // Send pending button
+                        document.getElementById('sendPendingBtn')?.addEventListener('click', () => {
+                            this.sendAllPending();
+                        });
+
+                        // Auto-send when online
+                        window.addEventListener('online', () => {
+                            if (this.pendingNotifications.length > 0) {
+                                showToast(`📬 Sending ${this.pendingNotifications.length} pending notifications...`, 2000);
+                                this.sendAllPending();
+                            }
+                        });
+
+                        this.updateUI();
+                    }
+
+                    loadPending() {
+                        try {
+                            return JSON.parse(localStorage.getItem('pending_notifications') || '[]');
+                        } catch {
+                            return [];
+                        }
+                    }
+
+                    savePending() {
+                        localStorage.setItem('pending_notifications', JSON.stringify(this.pendingNotifications));
+                        this.updateUI();
+                    }
+
+                    addPending(title, body, scheduledTime = null) {
+                        const notification = {
+                            id: Date.now() + Math.random(),
+                            title,
+                            body,
+                            scheduledTime: scheduledTime || new Date().toISOString(),
+                            created: new Date().toISOString()
+                        };
+                        
+                        this.pendingNotifications.push(notification);
+                        this.savePending();
+                        
+                        // Show immediately if it's time
+                        if (!scheduledTime || new Date(scheduledTime) <= new Date()) {
+                            this.showInAppNotification(title, body);
+                            this.vibrate();
+                        }
+                        
+                        return notification;
+                    }
+
+                    removePending(id) {
+                        this.pendingNotifications = this.pendingNotifications.filter(n => n.id !== id);
+                        this.savePending();
+                    }
+
+                    sendAllPending() {
+                        if (!navigator.onLine) {
+                            showToast('📴 Still offline • Will send when online', 2000);
+                            return;
+                        }
+
+                        const toSend = [...this.pendingNotifications];
+                        
+                        toSend.forEach(notification => {
+                            if (Notification.permission === 'granted') {
+                                try {
+                                    new Notification(notification.title, { body: notification.body });
+                                } catch (e) {
+                                    console.warn('Failed to send:', e);
+                                }
+                            }
+                            this.removePending(notification.id);
+                        });
+
+                        if (toSend.length > 0) {
+                            showToast(`✅ Sent ${toSend.length} reminders!`, 2000);
+                        }
+                        
+                        this.savePending();
+                    }
+
+                    showInAppNotification(title, body) {
+                        if (!this.inappEl) return;
+                        
+                        this.inappTitle.textContent = title;
+                        this.inappBody.textContent = body;
+                        this.inappEl.classList.add('show');
+                        
+                        // Auto-hide after 5 seconds
+                        setTimeout(() => {
+                            this.hideInAppNotification();
+                        }, 5000);
+                    }
+
+                    hideInAppNotification() {
+                        this.inappEl?.classList.remove('show');
+                    }
+
+                    vibrate() {
+                        if (navigator.vibrate) {
+                            navigator.vibrate([200, 100, 200]);
+                        }
+                    }
+
+                    updateUI() {
+                        const count = this.pendingNotifications.length;
+                        
+                        if (this.pendingBadge) {
+                            this.pendingBadge.textContent = count;
+                        }
+                        
+                        if (this.pendingCount) {
+                            this.pendingCount.style.display = count > 0 ? 'inline' : 'none';
+                        }
+                        
+                        if (this.pendingCard) {
+                            if (count > 0) {
+                                this.pendingCard.style.display = 'flex';
+                                const listText = this.pendingNotifications.slice(0, 3).map(n => n.title).join(', ');
+                                this.pendingList.textContent = listText + (count > 3 ? ` and ${count - 3} more` : '');
+                            } else {
+                                this.pendingCard.style.display = 'none';
+                            }
+                        }
+                    }
+
+                    checkScheduledNotifications() {
+                        const now = new Date();
+                        
+                        this.pendingNotifications.forEach(notification => {
+                            if (notification.scheduledTime) {
+                                const scheduled = new Date(notification.scheduledTime);
+                                if (scheduled <= now) {
+                                    this.showInAppNotification(notification.title, notification.body);
+                                    this.vibrate();
+                                    // Remove after showing
+                                    this.removePending(notification.id);
+                                }
+                            }
+                        });
+                    }
+                }
+
+                // Initialize notification manager
+                const notifManager = new OfflineNotificationManager();
+                
+                // Check scheduled notifications every minute
+                setInterval(() => {
+                    notifManager.checkScheduledNotifications();
+                }, 60000);
+
+                // ===== SMART NOTIFICATION FUNCTION =====
+                function sendSmartNotification(title, body, scheduledTime = null) {
+                    if (navigator.onLine && Notification.permission === 'granted') {
+                        // Online: Send system notification
+                        try {
+                            new Notification(title, { body: body });
+                            showToast(`📬 ${title}`, 1500);
+                            return true;
+                        } catch (e) {
+                            // Fallback to in-app
+                            notifManager.showInAppNotification(title, body);
+                            notifManager.vibrate();
+                            return false;
+                        }
+                    } else {
+                        // Offline: Queue for later + show in-app
+                        notifManager.addPending(title, body, scheduledTime);
+                        notifManager.showInAppNotification(title, body);
+                        notifManager.vibrate();
+                        
+                        const message = scheduledTime 
+                            ? `💾 Reminder saved • Will notify at ${new Date(scheduledTime).toLocaleTimeString()}`
+                            : '💾 Saved offline • Will show in-app';
+                        showToast(message, 3000);
+                        return false;
+                    }
+                }
+
+                // ===== STATE =====
                 let currentStreak = 1;
                 const todayDate = new Date();
                 todayDate.setHours(0, 0, 0, 0);
@@ -935,257 +857,36 @@ Pillowy nudge: stay mindful ✨</textarea
                 let activePreset = 25;
                 const timerDisplayEl = document.getElementById("timerDisplay");
 
-                // Modal handling (Confirm)
-                let modalResolve = null;
-                const modalOverlay = document.getElementById("confirmModal");
-                const modalMessage = document.getElementById(
-                    "confirmModalMessage",
-                );
-                const modalCancel =
-                    document.getElementById("confirmModalCancel");
-                const modalOk = document.getElementById("confirmModalOk");
-
-                // Install Guide Modal
-                const installGuideModal =
-                    document.getElementById("installGuideModal");
-                const showGuideBtn = document.getElementById(
-                    "showDetailedGuideBtn",
-                );
-                const closeGuideBtn =
-                    document.getElementById("closeGuideModal");
-
-                // Browser Warning Elements
-                const browserWarningCard =
-                    document.getElementById("browserWarningCard");
-                const browserIcon = document.getElementById("browserIcon");
-                const warningTitle = document.getElementById("warningTitle");
-                const warningMessage =
-                    document.getElementById("warningMessage");
-                const openInSafariBtn =
-                    document.getElementById("openInSafariBtn");
-                const dismissWarningBtn =
-                    document.getElementById("dismissWarningBtn");
-
-                function showModal(message) {
-                    return new Promise((resolve) => {
-                        modalResolve = resolve;
-                        modalMessage.innerText = message;
-                        modalOverlay.classList.add("show");
-                    });
-                }
-
-                function hideModal() {
-                    modalOverlay.classList.remove("show");
-                }
-
-                modalCancel.addEventListener("click", () => {
-                    if (modalResolve) modalResolve(false);
-                    hideModal();
+                // ===== OFFLINE BANNER =====
+                window.addEventListener('online', () => {
+                    document.getElementById('offlineBanner')?.classList.remove('show');
+                    showToast('📡 Back online!', 1500);
                 });
 
-                modalOk.addEventListener("click", () => {
-                    if (modalResolve) modalResolve(true);
-                    hideModal();
+                window.addEventListener('offline', () => {
+                    document.getElementById('offlineBanner')?.classList.add('show');
+                    showToast('📴 Offline mode • Reminders work in-app', 2500);
                 });
 
-                modalOverlay.addEventListener("click", (e) => {
-                    if (e.target === modalOverlay) {
-                        if (modalResolve) modalResolve(false);
-                        hideModal();
-                    }
-                });
-
-                // Install Guide Modal Events
-                if (showGuideBtn) {
-                    showGuideBtn.addEventListener("click", () => {
-                        installGuideModal.classList.add("show");
-                    });
+                if (!navigator.onLine) {
+                    document.getElementById('offlineBanner')?.classList.add('show');
                 }
 
-                if (closeGuideBtn) {
-                    closeGuideBtn.addEventListener("click", () => {
-                        installGuideModal.classList.remove("show");
-                    });
-                }
-
-                installGuideModal.addEventListener("click", (e) => {
-                    if (e.target === installGuideModal) {
-                        installGuideModal.classList.remove("show");
-                    }
-                });
-
-                // Browser Detection Functions
-                function isiOS() {
-                    return (
-                        /iPhone|iPad|iPod/i.test(navigator.userAgent) &&
-                        !window.MSStream
-                    );
-                }
-
-                function isSafari() {
-                    const ua = navigator.userAgent;
-                    return (
-                        /Safari/i.test(ua) &&
-                        !/CriOS|FxiOS|OPiOS|mercury|EdgiOS/i.test(ua)
-                    );
-                }
-
-                function getBrowserName() {
-                    const ua = navigator.userAgent;
-                    if (/EdgiOS/i.test(ua)) return "Edge";
-                    if (/CriOS/i.test(ua)) return "Chrome";
-                    if (/FxiOS/i.test(ua)) return "Firefox";
-                    if (/OPiOS/i.test(ua)) return "Opera";
-                    return "Browser";
-                }
-
-                function isPWA() {
-                    return window.navigator.standalone === true;
-                }
-
-                // Show warning for non-Safari iOS browsers
-                function checkBrowserAndShowWarning() {
-                    if (!isiOS()) {
-                        // Not iOS - hide warning
-                        if (browserWarningCard)
-                            browserWarningCard.style.display = "none";
-                        return false;
-                    }
-
-                    if (isPWA()) {
-                        // Already installed as PWA
-                        if (browserWarningCard)
-                            browserWarningCard.style.display = "none";
-                        if (document.getElementById("iosGuideCard")) {
-                            document.getElementById(
-                                "iosGuideCard",
-                            ).style.display = "none";
-                        }
-                        return false;
-                    }
-
-                    if (!isSafari()) {
-                        // iOS but not Safari - show warning
-                        const browserName = getBrowserName();
-                        if (browserWarningCard) {
-                            browserWarningCard.style.display = "block";
-                            browserIcon.innerText =
-                                browserName === "Edge"
-                                    ? "🌐"
-                                    : browserName === "Chrome"
-                                      ? "🔴"
-                                      : "🦊";
-                            warningTitle.innerText = `${browserName} Cannot Use Notifications`;
-                            warningMessage.innerText = `${browserName} on iOS doesn't support "Add to Home Screen" or notifications. Please open this page in Safari.`;
-                        }
-
-                        // Hide normal guide
-                        if (document.getElementById("iosGuideCard")) {
-                            document.getElementById(
-                                "iosGuideCard",
-                            ).style.display = "none";
-                        }
-                        return true;
-                    } else {
-                        // iOS Safari - show normal guide
-                        if (browserWarningCard)
-                            browserWarningCard.style.display = "none";
-                        return false;
-                    }
-                }
-
-                function checkiOSAndShowGuide() {
-                    const guideCard = document.getElementById("iosGuideCard");
-                    const permBadge = document.getElementById("permBadge");
-                    const reqBtn = document.getElementById("requestPermBtn");
-
-                    if (!isiOS()) {
-                        if (guideCard) guideCard.style.display = "none";
-                        return;
-                    }
-
-                    if (isPWA()) {
-                        if (guideCard) guideCard.style.display = "none";
-                        if (permBadge) permBadge.innerText = "✅ PWA Ready";
-                        if (reqBtn) reqBtn.disabled = false;
-                        return;
-                    }
-
-                    if (isSafari()) {
-                        // iOS Safari tab - show guide
-                        if (guideCard) guideCard.style.display = "block";
-                        if (permBadge)
-                            permBadge.innerText = "📲 Add to Home Screen";
-                        if (reqBtn) reqBtn.disabled = true;
-                    }
-                }
-
-                // Open in Safari button handler
-                if (openInSafariBtn) {
-                    openInSafariBtn.addEventListener("click", () => {
-                        // Copy current URL to clipboard
-                        const url = window.location.href;
-
-                        // Try to open in Safari using x-web-search scheme
-                        // This doesn't directly open Safari but shows instruction
-                        showToast(
-                            "📋 URL copied! Open Safari and paste it.",
-                            4000,
-                        );
-
-                        // Copy to clipboard
-                        navigator.clipboard?.writeText(url).catch(() => {
-                            prompt("Copy this URL and open in Safari:", url);
-                        });
-
-                        // Show detailed guide
-                        installGuideModal.classList.add("show");
-                    });
-                }
-
-                // Dismiss warning button
-                if (dismissWarningBtn) {
-                    dismissWarningBtn.addEventListener("click", () => {
-                        if (browserWarningCard)
-                            browserWarningCard.style.display = "none";
-                        showToast(
-                            "⚠️ Notifications won't work in this browser",
-                            3000,
-                        );
-                    });
-                }
-
-                // ----------------------- STREAK LOGIC (FIXED) -----------------------
+                // ===== STREAK LOGIC =====
                 function loadStreakData() {
-                    const savedStreak = localStorage.getItem(
-                        "pillowyStreak_glassy_v2",
-                    );
-                    const lastCheckinStr = localStorage.getItem(
-                        "lastCheckinDate_glassy",
-                    );
+                    const savedStreak = localStorage.getItem("pillowyStreak_glassy_v2");
+                    const lastCheckinStr = localStorage.getItem("lastCheckinDate_glassy");
 
-                    if (savedStreak && !isNaN(parseInt(savedStreak))) {
-                        currentStreak = parseInt(savedStreak);
-                    } else {
-                        currentStreak = 1;
-                    }
+                    currentStreak = (savedStreak && !isNaN(parseInt(savedStreak))) ? parseInt(savedStreak) : 1;
 
                     if (lastCheckinStr) {
                         const lastDate = new Date(lastCheckinStr);
                         lastDate.setHours(0, 0, 0, 0);
-
-                        const timeDiff =
-                            todayDate.getTime() - lastDate.getTime();
-                        const daysDiff = Math.floor(
-                            timeDiff / (1000 * 60 * 60 * 24),
-                        );
-
+                        const daysDiff = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+                        
                         if (daysDiff > 1) {
                             currentStreak = 1;
-                            localStorage.setItem(
-                                "pillowyStreak_glassy_v2",
-                                currentStreak,
-                            );
+                            localStorage.setItem("pillowyStreak_glassy_v2", currentStreak);
                         }
                     }
 
@@ -1196,11 +897,8 @@ Pillowy nudge: stay mindful ✨</textarea
                     const container = document.getElementById("calendarGrid");
                     if (!container) return;
 
-                    const checkedDates = JSON.parse(
-                        localStorage.getItem("checkedDatesArray") || "[]",
-                    );
+                    const checkedDates = JSON.parse(localStorage.getItem("checkedDatesArray") || "[]");
                     let calHtml = "";
-
                     const startDate = new Date(todayDate);
                     startDate.setDate(startDate.getDate() - 7);
 
@@ -1211,9 +909,7 @@ Pillowy nudge: stay mindful ✨</textarea
 
                         const dayNum = day.getDate();
                         const isToday = day.getTime() === todayDate.getTime();
-                        const isChecked = checkedDates.includes(
-                            day.toDateString(),
-                        );
+                        const isChecked = checkedDates.includes(day.toDateString());
 
                         let additionalClass = "";
                         if (isToday) additionalClass = "today";
@@ -1226,33 +922,28 @@ Pillowy nudge: stay mindful ✨</textarea
                 }
 
                 function updateStreakUI() {
-                    document
-                        .querySelectorAll("#streakValue, #streakRewardsValue")
-                        .forEach((el) => {
-                            if (el) el.innerText = currentStreak;
-                        });
+                    document.querySelectorAll("#streakValue, #streakRewardsValue").forEach(el => {
+                        if (el) el.innerText = currentStreak;
+                    });
+                    
                     const badgeEl = document.getElementById("badgeProgress");
                     if (badgeEl) {
-                        const displayStreak = Math.min(currentStreak, 21);
-                        badgeEl.innerText = `${displayStreak}/21 days`;
+                        badgeEl.innerText = `${Math.min(currentStreak, 21)}/21 days`;
                     }
+                    
                     updateCalendarUI();
                 }
 
                 function markTodayComplete() {
                     const todayStr = todayDate.toDateString();
-                    let checkedDates = JSON.parse(
-                        localStorage.getItem("checkedDatesArray") || "[]",
-                    );
+                    let checkedDates = JSON.parse(localStorage.getItem("checkedDatesArray") || "[]");
 
                     if (checkedDates.includes(todayStr)) {
                         showToast("🌟 You already checked in today!");
                         return;
                     }
 
-                    const lastCheckinStr = localStorage.getItem(
-                        "lastCheckinDate_glassy",
-                    );
+                    const lastCheckinStr = localStorage.getItem("lastCheckinDate_glassy");
                     let shouldIncreaseStreak = true;
 
                     if (lastCheckinStr) {
@@ -1267,70 +958,35 @@ Pillowy nudge: stay mindful ✨</textarea
                         }
                     }
 
-                    if (shouldIncreaseStreak && lastCheckinStr) {
-                        currentStreak += 1;
-                    } else if (!lastCheckinStr) {
-                        currentStreak = 1;
-                    }
+                    currentStreak = (shouldIncreaseStreak && lastCheckinStr) ? currentStreak + 1 : (!lastCheckinStr ? 1 : currentStreak);
 
                     localStorage.setItem("lastCheckinDate_glassy", todayStr);
                     checkedDates.push(todayStr);
-                    localStorage.setItem(
-                        "checkedDatesArray",
-                        JSON.stringify(checkedDates),
-                    );
-                    localStorage.setItem(
-                        "pillowyStreak_glassy_v2",
-                        currentStreak,
-                    );
+                    localStorage.setItem("checkedDatesArray", JSON.stringify(checkedDates));
+                    localStorage.setItem("pillowyStreak_glassy_v2", currentStreak);
 
                     updateStreakUI();
-                    showToast(
-                        `🎉 Check-in successful! Streak: ${currentStreak} days`,
-                    );
+                    showToast(`🎉 Check-in! Streak: ${currentStreak} days`, 2000);
 
-                    if (Notification.permission === "granted") {
-                        try {
-                            new Notification("Pillowy Reminders", {
-                                body: `✨ Day ${currentStreak} completed! Keep glowing.`,
-                            });
-                        } catch (e) {
-                            console.warn("Notification error:", e);
-                        }
-                    }
+                    // Send notification using smart system
+                    sendSmartNotification("Pillowy Reminders", `✨ Day ${currentStreak} completed! Keep glowing.`);
                 }
 
-                async function resetStreak() {
-                    const confirmed = await showModal(
-                        "Reset streak to 1? This is for testing purposes.",
-                    );
-                    if (confirmed) {
+                function resetStreak() {
+                    if (confirm("Reset streak to 1?")) {
                         currentStreak = 1;
-                        localStorage.setItem(
-                            "pillowyStreak_glassy_v2",
-                            currentStreak,
-                        );
+                        localStorage.setItem("pillowyStreak_glassy_v2", currentStreak);
                         localStorage.removeItem("lastCheckinDate_glassy");
                         localStorage.removeItem("checkedDatesArray");
                         updateStreakUI();
-                        showToast("🔄 Streak has been reset to 1");
+                        showToast("🔄 Streak reset to 1");
                     }
                 }
 
-                // ----------------------- NOTIFICATIONS -----------------------
+                // ===== NOTIFICATIONS =====
                 function updateNotifUI() {
                     const badgeSpan = document.getElementById("permBadge");
                     if (!badgeSpan) return;
-
-                    if (isiOS() && !isPWA() && !isSafari()) {
-                        badgeSpan.innerText = "❌ Use Safari";
-                        return;
-                    }
-
-                    if (isiOS() && !isPWA()) {
-                        badgeSpan.innerText = "📲 Add to Home Screen";
-                        return;
-                    }
 
                     if (Notification.permission === "granted") {
                         badgeSpan.innerText = "✅ Enabled";
@@ -1347,62 +1003,18 @@ Pillowy nudge: stay mindful ✨</textarea
                         return;
                     }
 
-                    // Non-Safari iOS
-                    if (isiOS() && !isSafari()) {
-                        installGuideModal.classList.add("show");
-                        showToast("⚠️ Please open this page in Safari", 3000);
-                        return;
-                    }
-
-                    // iOS Safari not installed
-                    if (isiOS() && !isPWA()) {
-                        installGuideModal.classList.add("show");
-                        return;
-                    }
-
-                    Notification.requestPermission().then((perm) => {
+                    Notification.requestPermission().then(perm => {
+                        updateNotifUI();
                         if (perm === "granted") {
                             showToast("🔔 Notifications enabled!");
-                            updateNotifUI();
-                            try {
-                                new Notification("Pillowy Reminders", {
-                                    body: "Cozy reminders active 🌸",
-                                });
-                            } catch (e) {}
+                            sendSmartNotification("Pillowy Reminders", "Cozy reminders active 🌸");
                         } else {
-                            showToast("Permission denied");
-                            updateNotifUI();
+                            showToast("⚠️ Permission denied • In-app notifications still work");
                         }
                     });
                 }
 
-                function sendLocalNotification(title, body) {
-                    if (Notification.permission === "granted") {
-                        try {
-                            new Notification(title, { body: body });
-                            showToast(`📬 ${title}`);
-                        } catch (e) {
-                            showToast("⚠️ Notification blocked");
-                        }
-                    } else if (isiOS() && !isPWA()) {
-                        if (!isSafari()) {
-                            showToast(
-                                "📲 Open in Safari, then Add to Home Screen",
-                                4000,
-                            );
-                            installGuideModal.classList.add("show");
-                        } else {
-                            showToast(
-                                "📲 Add Pillowy to Home Screen first",
-                                3000,
-                            );
-                        }
-                    } else {
-                        showToast("⚠️ Enable notifications first");
-                    }
-                }
-
-                // ----------------------- TIMER -----------------------
+                // ===== TIMER =====
                 function updateTimerUI() {
                     if (!timerDisplayEl) return;
                     const mins = Math.floor(focusSecondsRemaining / 60);
@@ -1416,13 +1028,8 @@ Pillowy nudge: stay mindful ✨</textarea
                     activePreset = minutes;
                     updateTimerUI();
 
-                    document.querySelectorAll(".preset-btn").forEach((btn) => {
-                        const btnMins = parseInt(btn.dataset.minutes);
-                        if (btnMins === minutes) {
-                            btn.classList.add("active-preset");
-                        } else {
-                            btn.classList.remove("active-preset");
-                        }
+                    document.querySelectorAll(".preset-btn").forEach(btn => {
+                        btn.classList.toggle("active-preset", parseInt(btn.dataset.minutes) === minutes);
                     });
                 }
 
@@ -1435,19 +1042,14 @@ Pillowy nudge: stay mindful ✨</textarea
 
                 function startFocusTimer() {
                     if (focusInterval) stopTimer();
-                    if (focusSecondsRemaining <= 0) {
-                        setPreset(activePreset || 25);
-                    }
+                    if (focusSecondsRemaining <= 0) setPreset(activePreset || 25);
 
                     focusInterval = setInterval(() => {
                         if (focusSecondsRemaining <= 1) {
                             stopTimer();
                             focusSecondsRemaining = 0;
                             updateTimerUI();
-                            sendLocalNotification(
-                                "🧘 Focus complete!",
-                                `Your ${activePreset}min session finished. Marshie says well done!`,
-                            );
+                            sendSmartNotification("🧘 Focus complete!", `Your ${activePreset}min session finished. Well done!`);
                         } else {
                             focusSecondsRemaining--;
                             updateTimerUI();
@@ -1461,34 +1063,12 @@ Pillowy nudge: stay mindful ✨</textarea
                     updateTimerUI();
                 }
 
-                // ----------------------- CUSTOM REMINDER -----------------------
+                // ===== CUSTOM REMINDER =====
                 function scheduleCustomReminder() {
-                    if (Notification.permission !== "granted") {
-                        if (isiOS() && !isPWA()) {
-                            if (!isSafari()) {
-                                showToast("📲 Open in Safari first", 3500);
-                            } else {
-                                showToast(
-                                    "📲 Add to Home Screen to use reminders",
-                                    3500,
-                                );
-                            }
-                            installGuideModal.classList.add("show");
-                        } else {
-                            showToast("Please enable notifications first.");
-                        }
-                        return;
-                    }
-
-                    const hour = parseInt(
-                        document.getElementById("customHour").value,
-                    );
-                    const minute = parseInt(
-                        document.getElementById("customMinute").value,
-                    );
-                    let customMsg = document
-                        .getElementById("customNotiText")
-                        .value.trim();
+                    const hour = parseInt(document.getElementById("customHour").value);
+                    const minute = parseInt(document.getElementById("customMinute").value);
+                    let customMsg = document.getElementById("customNotiText").value.trim();
+                    const repeatOption = document.getElementById("repeatOption")?.value || "none";
 
                     if (isNaN(hour) || hour < 0 || hour > 23) {
                         showToast("Hour must be 0-23");
@@ -1498,7 +1078,7 @@ Pillowy nudge: stay mindful ✨</textarea
                         showToast("Minute 0-59");
                         return;
                     }
-                    if (customMsg === "") customMsg = "Pillowy gentle reminder";
+                    if (!customMsg) customMsg = "Pillowy gentle reminder";
 
                     const now = new Date();
                     const target = new Date();
@@ -1509,40 +1089,44 @@ Pillowy nudge: stay mindful ✨</textarea
                     }
 
                     const delay = target.getTime() - now.getTime();
+                    
                     if (delay > 2147483647) {
-                        showToast("Too far in future, try within 24 days");
+                        showToast("Time too far in future");
                         return;
                     }
 
+                    // Schedule the notification
                     setTimeout(() => {
-                        sendLocalNotification(
-                            "⏰ Custom Pillowy Reminder",
-                            customMsg,
-                        );
+                        sendSmartNotification("⏰ Custom Reminder", customMsg, target.toISOString());
+                        
+                        // Handle repeat
+                        if (repeatOption === "daily") {
+                            const nextDay = new Date(target);
+                            nextDay.setDate(nextDay.getDate() + 1);
+                            const repeatDelay = nextDay.getTime() - new Date().getTime();
+                            
+                            setTimeout(() => {
+                                scheduleCustomReminder(); // Recurring
+                            }, repeatDelay);
+                        }
                     }, delay);
 
                     const timeStr = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
-                    showToast(`Reminder set at ${timeStr} with your message.`);
+                    const offlineMsg = navigator.onLine ? '' : ' (offline mode)';
+                    showToast(`⏰ Reminder set for ${timeStr}${offlineMsg}`, 3000);
                 }
 
-                // ----------------------- UI HELPERS -----------------------
+                // ===== UI HELPERS =====
                 function switchPage(pageId) {
-                    document
-                        .querySelectorAll(".page")
-                        .forEach((p) => p.classList.remove("active-page"));
-                    const targetPage = document.getElementById(pageId);
-                    if (targetPage) targetPage.classList.add("active-page");
+                    document.querySelectorAll(".page").forEach(p => p.classList.remove("active-page"));
+                    document.getElementById(pageId)?.classList.add("active-page");
 
-                    document
-                        .querySelectorAll(".tab-item")
-                        .forEach((tab) => tab.classList.remove("active"));
-                    const activeTab = Array.from(
-                        document.querySelectorAll(".tab-item"),
-                    ).find((tab) => tab.dataset.page === pageId);
-                    if (activeTab) activeTab.classList.add("active");
+                    document.querySelectorAll(".tab-item").forEach(tab => {
+                        tab.classList.toggle("active", tab.dataset.page === pageId);
+                    });
 
                     if (pageId !== "focusPage" && focusInterval) {
-                        showToast("⏱️ Timer still running in background", 1500);
+                        showToast("⏱️ Timer running in background", 1500);
                     }
                 }
 
@@ -1550,9 +1134,7 @@ Pillowy nudge: stay mindful ✨</textarea
                     const toast = document.getElementById("toastMessage");
                     toast.innerText = msg;
                     toast.style.opacity = "1";
-                    setTimeout(() => {
-                        toast.style.opacity = "0";
-                    }, duration);
+                    setTimeout(() => { toast.style.opacity = "0"; }, duration);
                 }
 
                 function updateCharCount() {
@@ -1561,66 +1143,42 @@ Pillowy nudge: stay mindful ✨</textarea
                     if (textarea && charCount) {
                         const len = textarea.value.length;
                         charCount.innerText = `${len}/100`;
-                        charCount.style.color =
-                            len > 90 ? "#e36b5e" : "#9b6b5e";
+                        charCount.style.color = len > 90 ? "#e36b5e" : "#9b6b5e";
                     }
                 }
 
-                // ----------------------- INITIALIZATION -----------------------
+                // ===== SERVICE WORKER =====
+                if ('serviceWorker' in navigator) {
+                    window.addEventListener('load', () => {
+                        navigator.serviceWorker.register('/sw.js')
+                            .then(reg => console.log('✅ SW registered'))
+                            .catch(err => console.log('❌ SW failed:', err));
+                    });
+                }
+
+                // ===== INITIALIZATION =====
                 document.addEventListener("DOMContentLoaded", () => {
                     loadStreakData();
-
-                    // Check browser first
-                    const isUnsupportedBrowser = checkBrowserAndShowWarning();
-                    checkiOSAndShowGuide();
-
                     updateNotifUI();
                     setPreset(25);
 
                     // Event listeners
-                    document.querySelectorAll(".preset-btn").forEach((btn) => {
-                        btn.addEventListener("click", () => {
-                            const mins = parseInt(btn.dataset.minutes);
-                            setPreset(mins);
-                        });
+                    document.querySelectorAll(".preset-btn").forEach(btn => {
+                        btn.addEventListener("click", () => setPreset(parseInt(btn.dataset.minutes)));
                     });
 
-                    document
-                        .getElementById("startTimerBtn")
-                        ?.addEventListener("click", startFocusTimer);
-                    document
-                        .getElementById("resetTimerBtn")
-                        ?.addEventListener("click", resetFocusTimer);
-                    document
-                        .getElementById("mockCompleteTodayBtn")
-                        ?.addEventListener("click", markTodayComplete);
-                    document
-                        .getElementById("resetStreakBtn")
-                        ?.addEventListener("click", resetStreak);
-                    document
-                        .getElementById("scheduleCustomNudgeBtn")
-                        ?.addEventListener("click", scheduleCustomReminder);
-                    document
-                        .getElementById("testNotifBtn")
-                        ?.addEventListener("click", () => {
-                            sendLocalNotification(
-                                "Pillowy Reminder 💊",
-                                "Stay consistent & cozy!",
-                            );
-                        });
-                    document
-                        .getElementById("requestPermBtn")
-                        ?.addEventListener(
-                            "click",
-                            requestNotificationPermission,
-                        );
-                    document
-                        .getElementById("viewAllLink")
-                        ?.addEventListener("click", () => {
-                            switchPage("rewardsPage");
-                        });
+                    document.getElementById("startTimerBtn")?.addEventListener("click", startFocusTimer);
+                    document.getElementById("resetTimerBtn")?.addEventListener("click", resetFocusTimer);
+                    document.getElementById("mockCompleteTodayBtn")?.addEventListener("click", markTodayComplete);
+                    document.getElementById("resetStreakBtn")?.addEventListener("click", resetStreak);
+                    document.getElementById("scheduleCustomNudgeBtn")?.addEventListener("click", scheduleCustomReminder);
+                    document.getElementById("testNotifBtn")?.addEventListener("click", () => {
+                        sendSmartNotification("Pillowy Test 💊", "This works offline too! 🌸");
+                    });
+                    document.getElementById("requestPermBtn")?.addEventListener("click", requestNotificationPermission);
+                    document.getElementById("viewAllLink")?.addEventListener("click", () => switchPage("rewardsPage"));
 
-                    document.querySelectorAll(".tab-item").forEach((btn) => {
+                    document.querySelectorAll(".tab-item").forEach(btn => {
                         btn.addEventListener("click", () => {
                             const pageId = btn.dataset.page;
                             if (pageId) switchPage(pageId);
@@ -1636,16 +1194,11 @@ Pillowy nudge: stay mindful ✨</textarea
                     updateCalendarUI();
                     switchPage("homePage");
 
-                    if (Notification.permission === "granted") {
-                        updateNotifUI();
-                    }
-
                     window.addEventListener("beforeunload", () => {
-                        if (focusInterval) {
-                            clearInterval(focusInterval);
-                        }
+                        if (focusInterval) clearInterval(focusInterval);
                     });
                 });
+
             })();
         </script>
     </body>

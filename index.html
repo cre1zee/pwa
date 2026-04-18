@@ -17,9 +17,10 @@
         <meta name="apple-mobile-web-app-title" content="Pillowy" />
         <meta name="theme-color" content="#fbc4d2" />
 
-        <title>Pillowy • Offline Reminders</title>
+        <title>Pillowy • Cozy Focus Timer & Reminders</title>
 
         <style>
+            /* ===== RESET & BASE ===== */
             * {
                 margin: 0;
                 padding: 0;
@@ -27,55 +28,522 @@
                 -webkit-tap-highlight-color: transparent;
             }
 
-            body {
+            html, body {
                 min-height: 100vh;
+                height: 100%;
+                width: 100%;
+                overflow-x: hidden;
+            }
+
+            body {
                 background: linear-gradient(145deg, #ffe4ec 0%, #fbc4d2 100%);
-                font-family: system-ui, -apple-system, "Segoe UI", "SF Pro Text", sans-serif;
-                padding: 20px 16px 32px;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Text", "Inter", system-ui, sans-serif;
                 color: #3a2c28;
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            }
+
+            /* Floating orbs background */
+            body::before {
+                content: "";
+                position: fixed;
+                top: -15%;
+                left: -5%;
+                width: min(280px, 50vw);
+                height: min(280px, 50vw);
+                background: radial-gradient(circle, rgba(255, 215, 230, 0.6) 0%, rgba(255, 200, 210, 0) 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 0;
+                animation: floatOrb 16s infinite alternate ease-in-out;
+            }
+            
+            body::after {
+                content: "";
+                position: fixed;
+                bottom: -10%;
+                right: -5%;
+                width: min(380px, 60vw);
+                height: min(380px, 60vw);
+                background: radial-gradient(circle, rgba(255, 200, 215, 0.5) 0%, rgba(255, 180, 200, 0) 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 0;
+                animation: floatOrb2 20s infinite alternate ease-in-out;
+            }
+
+            @keyframes floatOrb {
+                0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+                100% { transform: translate(40px, 35px) scale(1.15); opacity: 0.8; }
+            }
+            
+            @keyframes floatOrb2 {
+                0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+                100% { transform: translate(-30px, -40px) scale(1.25); opacity: 0.7; }
+            }
+
+            /* ===== MAIN CONTAINER - CENTERED & RESPONSIVE ===== */
+            .app-container {
+                width: 100%;
+                max-width: 500px;
+                margin: 0 auto;
+                background: rgba(255, 245, 245, 0.35);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border-radius: 48px;
+                box-shadow: 
+                    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+                    inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+                overflow: hidden;
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                position: relative;
+                z-index: 2;
+                display: flex;
+                flex-direction: column;
+                min-height: min(800px, 95vh);
+                max-height: 95vh;
+            }
+
+            /* ===== STATUS BAR ===== */
+            .status-bar {
+                padding: 16px 24px 8px;
+                font-size: 16px;
+                font-weight: 600;
+                color: #5a3e36;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: rgba(255, 240, 240, 0.3);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                border-bottom: 1px solid rgba(255, 215, 215, 0.4);
+                flex-shrink: 0;
+            }
+
+            .status-left {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .status-right {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .pending-badge-container {
                 position: relative;
             }
 
-            /* Offline Banner */
+            .pending-notification-badge {
+                background: #e36b5e;
+                color: white;
+                border-radius: 50%;
+                min-width: 22px;
+                height: 22px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                padding: 0 4px;
+                box-shadow: 0 2px 8px rgba(227, 107, 94, 0.3);
+            }
+
+            /* ===== MAIN CONTENT AREA - SCROLLABLE ===== */
+            .content-area {
+                flex: 1;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 16px 20px 8px;
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Hide scrollbar but keep functionality */
+            .content-area::-webkit-scrollbar {
+                width: 0;
+                background: transparent;
+            }
+
+            /* ===== PAGES ===== */
+            .page {
+                display: none;
+                animation: fadeSlide 0.3s ease;
+                padding-bottom: 8px;
+            }
+
+            .page.active-page {
+                display: block;
+            }
+
+            @keyframes fadeSlide {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* ===== GLASS CARDS ===== */
+            .streak-card,
+            .focus-card,
+            .reminder-card,
+            .glass-panel {
+                background: rgba(255, 250, 245, 0.6);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border-radius: 36px;
+                padding: 24px 20px;
+                margin-bottom: 16px;
+                box-shadow: 
+                    0 8px 24px rgba(0, 0, 0, 0.06),
+                    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .reminder-card {
+                padding: 18px 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+            }
+
+            .reminder-card:active {
+                transform: scale(0.98);
+                background: rgba(255, 245, 240, 0.7);
+            }
+
+            .streak-number {
+                font-size: clamp(48px, 12vw, 64px);
+                font-weight: 800;
+                background: linear-gradient(135deg, #e6826b, #d45a46);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                line-height: 1.1;
+                margin: 8px 0 4px;
+            }
+
+            .section-title {
+                font-weight: 650;
+                font-size: 18px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 16px 0 12px 0;
+                color: #553b30;
+                padding: 0 4px;
+            }
+
+            .reminder-time {
+                font-weight: 700;
+                background: rgba(227, 107, 94, 0.2);
+                padding: 6px 14px;
+                border-radius: 30px;
+                color: #cb5e4a;
+                font-size: 14px;
+            }
+
+            /* ===== CALENDAR ===== */
+            .calendar-grid {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 6px;
+                margin: 16px 0;
+            }
+
+            .cal-day {
+                text-align: center;
+                font-size: 14px;
+                font-weight: 500;
+                padding: 10px 0;
+                border-radius: 30px;
+                background: rgba(255, 240, 235, 0.6);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                transition: all 0.15s;
+            }
+
+            .cal-day.today {
+                background: #e36b5e;
+                color: white;
+                box-shadow: 0 4px 12px rgba(227, 107, 94, 0.3);
+                font-weight: 600;
+            }
+
+            .cal-day.checked {
+                background: rgba(210, 140, 110, 0.85);
+                color: white;
+            }
+
+            /* ===== TIMER ===== */
+            .timer-container {
+                text-align: center;
+            }
+
+            .timer-label {
+                display: inline-block;
+                background: rgba(255, 230, 220, 0.6);
+                padding: 6px 20px;
+                border-radius: 40px;
+                font-weight: 600;
+                color: #9b5a48;
+                margin-bottom: 12px;
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+            }
+
+            .preset-group {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                margin: 20px 0;
+                flex-wrap: wrap;
+            }
+
+            .preset-btn {
+                background: rgba(245, 220, 210, 0.8);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                padding: 10px 22px;
+                border-radius: 40px;
+                font-weight: 600;
+                color: #9b5a48;
+                border: none;
+                font-size: 15px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                flex: 0 1 auto;
+            }
+
+            .preset-btn.active-preset {
+                background: #e36b5e;
+                color: white;
+                box-shadow: 0 4px 12px rgba(227, 107, 94, 0.3);
+            }
+
+            .preset-btn:active {
+                transform: scale(0.95);
+            }
+
+            .timer-display {
+                font-size: clamp(48px, 15vw, 64px);
+                font-weight: 800;
+                font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Mono", monospace;
+                background: rgba(255, 250, 245, 0.7);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                display: inline-block;
+                padding: 16px 32px;
+                border-radius: 60px;
+                margin: 16px 0;
+                letter-spacing: 4px;
+                box-shadow: inset 0 1px 3px rgba(255,255,255,0.8), 0 4px 12px rgba(0,0,0,0.08);
+            }
+
+            .marshie-message {
+                text-align: center;
+                color: #9b6b5e;
+                margin: 12px 0;
+                font-style: italic;
+                font-weight: 500;
+                font-size: 15px;
+            }
+
+            .timer-actions {
+                display: flex;
+                gap: 12px;
+                justify-content: center;
+                margin-top: 16px;
+            }
+
+            /* ===== FORMS ===== */
+            .form-group {
+                margin-bottom: 16px;
+            }
+
+            .form-label {
+                font-weight: 600;
+                font-size: 14px;
+                color: #6b4a3e;
+                margin-bottom: 6px;
+                display: block;
+            }
+
+            input, textarea, select {
+                background: rgba(255, 245, 240, 0.8);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                border: 1.5px solid rgba(255, 215, 200, 0.6);
+                border-radius: 30px;
+                padding: 14px 18px;
+                font-size: 16px;
+                width: 100%;
+                font-family: inherit;
+                outline: none;
+                transition: border-color 0.2s, box-shadow 0.2s;
+                color: #3a2c28;
+            }
+
+            textarea {
+                border-radius: 24px;
+                resize: vertical;
+                min-height: 80px;
+            }
+
+            select {
+                appearance: none;
+                -webkit-appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239b5a48' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 18px center;
+                background-size: 16px;
+                padding-right: 48px;
+            }
+
+            input:focus, textarea:focus, select:focus {
+                border-color: #e36b5e;
+                box-shadow: 0 0 0 3px rgba(227, 107, 94, 0.15);
+            }
+
+            /* ===== BUTTONS ===== */
+            button {
+                background: rgba(227, 107, 94, 0.9);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                border: none;
+                padding: 14px 24px;
+                border-radius: 40px;
+                font-weight: 600;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 12px rgba(227, 107, 94, 0.25);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+
+            button:active {
+                transform: scale(0.97);
+                box-shadow: 0 2px 6px rgba(227, 107, 94, 0.2);
+            }
+
+            button:disabled {
+                opacity: 0.5;
+                pointer-events: none;
+                filter: grayscale(0.3);
+            }
+
+            .btn-outline {
+                background: rgba(255, 245, 240, 0.8) !important;
+                color: #e36b5e !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+                border: 1px solid rgba(227, 107, 94, 0.2) !important;
+            }
+
+            .btn-block {
+                width: 100%;
+            }
+
+            .btn-small {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+
+            /* ===== TAB BAR ===== */
+            .tab-bar {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                background: rgba(255, 245, 245, 0.6);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(255, 255, 255, 0.6);
+                padding: 10px 20px 16px;
+                margin-top: auto;
+                flex-shrink: 0;
+            }
+
+            .tab-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                font-size: 12px;
+                font-weight: 500;
+                color: #ad7a68;
+                background: transparent;
+                border: none;
+                font-family: inherit;
+                cursor: pointer;
+                padding: 8px 16px;
+                border-radius: 40px;
+                transition: all 0.2s ease;
+            }
+
+            .tab-item.active {
+                color: #e36b5e;
+                background: rgba(255, 220, 210, 0.7);
+                font-weight: 600;
+            }
+
+            .tab-icon {
+                font-size: 24px;
+            }
+
+            /* ===== NOTIFICATIONS & BANNERS ===== */
             .offline-banner {
-                position: fixed;
+                position: absolute;
                 top: 0;
                 left: 0;
                 right: 0;
                 background: rgba(227, 107, 94, 0.95);
                 color: white;
                 text-align: center;
-                padding: 12px;
-                font-size: 14px;
+                padding: 10px;
+                font-size: 13px;
                 backdrop-filter: blur(10px);
-                z-index: 1000;
+                -webkit-backdrop-filter: blur(10px);
+                z-index: 100;
                 transform: translateY(-100%);
                 transition: transform 0.3s;
-                font-weight: 600;
+                font-weight: 500;
             }
 
             .offline-banner.show {
                 transform: translateY(0);
             }
 
-            /* In-App Notification (Offline Alert) */
             .inapp-notification {
-                position: fixed;
+                position: absolute;
                 top: 60px;
-                left: 20px;
-                right: 20px;
-                background: rgba(255, 250, 245, 0.95);
+                left: 16px;
+                right: 16px;
+                background: rgba(255, 250, 245, 0.98);
                 backdrop-filter: blur(20px);
-                border-radius: 20px;
-                padding: 16px 20px;
+                -webkit-backdrop-filter: blur(20px);
+                border-radius: 24px;
+                padding: 16px 18px;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
                 border: 1px solid rgba(227, 107, 94, 0.3);
-                z-index: 999;
+                z-index: 99;
                 transform: translateY(-150%);
                 transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
                 display: flex;
                 align-items: center;
-                gap: 12px;
+                gap: 14px;
             }
 
             .inapp-notification.show {
@@ -83,7 +551,7 @@
             }
 
             .inapp-notification-icon {
-                font-size: 32px;
+                font-size: 36px;
             }
 
             .inapp-notification-content {
@@ -94,389 +562,116 @@
                 font-weight: 700;
                 color: #e36b5e;
                 margin-bottom: 4px;
+                font-size: 16px;
             }
 
             .inapp-notification-body {
                 font-size: 14px;
                 color: #5a3e36;
+                opacity: 0.9;
             }
 
             .inapp-notification-close {
                 background: none;
                 border: none;
-                font-size: 20px;
+                font-size: 22px;
                 cursor: pointer;
                 color: #999;
-                padding: 5px;
-            }
-
-            /* Pending Notifications Badge */
-            .pending-badge {
-                position: absolute;
-                top: -5px;
-                right: -5px;
-                background: #e36b5e;
-                color: white;
-                border-radius: 50%;
-                width: 20px;
-                height: 20px;
-                font-size: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-            }
-
-            /* Copy toàn bộ CSS gốc của bạn */
-            /* ... (giữ nguyên toàn bộ CSS cũ) ... */
-            
-            body::before {
-                content: "";
-                position: fixed;
-                top: -15%;
-                left: -5%;
-                width: 280px;
-                height: 280px;
-                background: radial-gradient(
-                    circle,
-                    rgba(255, 215, 230, 0.6) 0%,
-                    rgba(255, 200, 210, 0) 70%
-                );
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 0;
-                animation: floatOrb 16s infinite alternate;
-            }
-            
-            body::after {
-                content: "";
-                position: fixed;
-                bottom: -10%;
-                right: -5%;
-                width: 380px;
-                height: 380px;
-                background: radial-gradient(
-                    circle,
-                    rgba(255, 200, 215, 0.5) 0%,
-                    rgba(255, 180, 200, 0) 70%
-                );
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 0;
-                animation: floatOrb2 20s infinite alternate;
-            }
-
-            @keyframes floatOrb {
-                0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-                100% { transform: translate(40px, 35px) scale(1.2); opacity: 0.8; }
-            }
-            
-            @keyframes floatOrb2 {
-                0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-                100% { transform: translate(-30px, -40px) scale(1.3); opacity: 0.7; }
-            }
-
-            .app-container {
-                max-width: 500px;
-                margin: 0 auto;
-                background: rgba(255, 245, 245, 0.35);
-                backdrop-filter: blur(18px) saturate(180%);
-                -webkit-backdrop-filter: blur(18px);
-                border-radius: 56px;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-                overflow: hidden;
-                padding-bottom: 12px;
-                border: 1px solid rgba(255, 255, 255, 0.5);
-                position: relative;
-                z-index: 2;
-            }
-
-            .status-bar {
-                padding: 14px 20px 6px;
-                font-size: 15px;
-                font-weight: 590;
-                color: #5a3e36;
-                display: flex;
-                justify-content: space-between;
-                background: rgba(255, 240, 240, 0.3);
-                backdrop-filter: blur(4px);
-                border-bottom: 1px solid rgba(255, 215, 215, 0.5);
-                position: relative;
-            }
-
-            .pending-notification-badge {
-                background: #e36b5e;
-                color: white;
-                border-radius: 50%;
-                width: 22px;
-                height: 22px;
-                font-size: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                margin-left: 8px;
-            }
-
-            /* Các style còn lại giữ nguyên */
-            .tab-bar {
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                background: rgba(255, 245, 245, 0.5);
-                backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(255, 255, 255, 0.6);
-                padding: 8px 20px 14px;
-                margin-top: 8px;
-            }
-
-            .tab-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 5px;
-                font-size: 12px;
-                font-weight: 500;
-                color: #ad7a68;
-                background: transparent;
-                border: none;
-                font-family: inherit;
-                cursor: pointer;
-                padding: 6px 12px;
-                border-radius: 40px;
-                transition: all 0.2s ease;
-            }
-
-            .tab-item.active {
-                color: #e36b5e;
-                background: rgba(255, 220, 210, 0.6);
-                font-weight: 600;
-            }
-
-            .tab-icon {
-                font-size: 22px;
-            }
-
-            .page {
-                display: none;
-                padding: 20px 20px 10px;
-                animation: fadeSlideGlass 0.3s ease;
-            }
-
-            .page.active-page {
-                display: block;
-            }
-
-            @keyframes fadeSlideGlass {
-                from {
-                    opacity: 0;
-                    transform: translateY(10px) scale(0.98);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0) scale(1);
-                }
-            }
-
-            .streak-card, .focus-card, .reminder-card, .glass-panel {
-                background: rgba(255, 250, 245, 0.55);
-                backdrop-filter: blur(12px);
-                border-radius: 40px;
-                padding: 20px 18px;
-                margin-bottom: 20px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.7);
-                border: 1px solid rgba(255, 255, 255, 0.5);
-            }
-
-            .streak-number {
-                font-size: 56px;
-                font-weight: 800;
-                background: linear-gradient(135deg, #e6826b, #d45a46);
-                -webkit-background-clip: text;
-                background-clip: text;
-                color: transparent;
-                line-height: 1;
-            }
-
-            .section-title {
-                font-weight: 640;
-                font-size: 18px;
-                display: flex;
-                justify-content: space-between;
-                margin: 20px 0 12px 0;
-                color: #553b30;
-            }
-
-            .reminder-card {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 12px;
-            }
-
-            .reminder-time {
-                font-weight: 700;
-                background: rgba(227, 107, 94, 0.2);
-                padding: 5px 12px;
-                border-radius: 30px;
-                color: #cb5e4a;
-            }
-
-            .calendar-grid {
-                display: grid;
-                grid-template-columns: repeat(7, 1fr);
-                gap: 8px;
-                margin: 16px 0;
-            }
-
-            .cal-day {
-                text-align: center;
-                font-size: 14px;
-                font-weight: 500;
-                padding: 8px 0;
-                border-radius: 40px;
-                background: rgba(255, 240, 235, 0.6);
-                backdrop-filter: blur(4px);
-            }
-
-            .cal-day.today {
-                background: #e36b5e;
-                color: white;
-                box-shadow: 0 4px 12px rgba(227, 107, 94, 0.3);
-            }
-
-            .cal-day.checked {
-                background: rgba(210, 140, 110, 0.8);
-                color: white;
-            }
-
-            .preset-group {
-                display: flex;
-                gap: 12px;
-                justify-content: center;
-                margin: 16px 0;
-                flex-wrap: wrap;
-            }
-
-            .preset-btn {
-                background: rgba(245, 220, 210, 0.8);
-                backdrop-filter: blur(4px);
-                padding: 8px 20px;
-                border-radius: 40px;
-                font-weight: 600;
-                color: #9b5a48;
-                border: none;
-                font-size: 14px;
-                cursor: pointer;
-                transition: all 0.2s ease;
-            }
-
-            .preset-btn.active-preset {
-                background: #e36b5e;
-                color: white;
-            }
-
-            .preset-btn:active {
-                transform: scale(0.96);
-            }
-
-            .timer-display {
-                font-size: 52px;
-                font-weight: 800;
-                font-family: monospace;
-                background: rgba(255, 250, 245, 0.7);
-                backdrop-filter: blur(12px);
-                display: inline-block;
-                padding: 12px 28px;
-                border-radius: 70px;
-                margin: 12px 0;
-            }
-
-            .marshie-message {
-                text-align: center;
-                color: #9b6b5e;
-                margin: 8px 0;
-                font-style: italic;
-                font-weight: 500;
-            }
-
-            input, textarea {
-                background: rgba(255, 245, 240, 0.8);
-                backdrop-filter: blur(8px);
-                border: 1px solid rgba(255, 215, 200, 0.8);
-                border-radius: 44px;
-                padding: 12px 16px;
-                font-size: 16px;
-                width: 100%;
-                font-family: inherit;
-                outline: none;
-            }
-
-            textarea {
-                border-radius: 24px;
-                resize: vertical;
-            }
-
-            button {
-                background: rgba(227, 107, 94, 0.85);
-                backdrop-filter: blur(8px);
-                border: none;
-                padding: 12px 20px;
-                border-radius: 44px;
-                font-weight: 600;
-                color: white;
-                font-size: 16px;
-                cursor: pointer;
-                transition: 0.2s;
-            }
-
-            button:active {
-                transform: scale(0.96);
-            }
-
-            .btn-outline {
-                background: rgba(255, 245, 240, 0.7) !important;
-                color: #e36b5e !important;
-            }
-
-            .notification-perm {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 8px;
-                font-size: 13px;
+                padding: 8px;
+                box-shadow: none;
             }
 
             .toast-msg {
                 position: fixed;
-                bottom: 90px;
+                bottom: 100px;
                 left: 50%;
                 transform: translateX(-50%);
-                background: rgba(50, 35, 30, 0.85);
+                background: rgba(50, 35, 30, 0.9);
                 backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
                 color: #ffe3db;
-                padding: 10px 20px;
+                padding: 12px 24px;
                 border-radius: 60px;
-                font-size: 13px;
+                font-size: 14px;
                 z-index: 200;
                 pointer-events: none;
-                transition: opacity 0.2s;
-                max-width: 90%;
+                transition: opacity 0.25s;
+                max-width: 85%;
                 text-align: center;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            /* ===== UTILITIES ===== */
+            .notification-perm {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+                font-size: 13px;
+                padding: 8px 4px;
             }
 
             .view-all-link {
                 cursor: pointer;
                 opacity: 0.7;
                 transition: opacity 0.2s;
+                font-size: 14px;
+            }
+
+            .view-all-link:hover {
+                opacity: 1;
             }
 
             .badge-progress-container {
-                background: rgba(255, 240, 235, 0.5);
+                background: rgba(255, 240, 235, 0.6);
                 border-radius: 28px;
-                padding: 16px;
-                margin-top: 12px;
+                padding: 18px;
+                margin-top: 16px;
                 text-align: center;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+
+            .pending-reminders-card {
+                background: rgba(227, 107, 94, 0.12);
+                border: 1px solid rgba(227, 107, 94, 0.2);
+            }
+
+            .char-counter {
+                font-size: 12px;
+                color: #9b6b5e;
+                margin-top: 4px;
+                text-align: right;
+            }
+
+            /* ===== RESPONSIVE FIXES ===== */
+            @media (max-width: 400px) {
+                .app-container {
+                    border-radius: 32px;
+                    min-height: auto;
+                    max-height: none;
+                }
+                
+                .status-bar {
+                    padding: 14px 18px 6px;
+                }
+                
+                .content-area {
+                    padding: 12px 16px 8px;
+                }
+                
+                .streak-card, .focus-card, .glass-panel {
+                    padding: 20px 16px;
+                }
+            }
+
+            @media (min-width: 500px) {
+                body {
+                    padding: 16px;
+                }
             }
         </style>
     </head>
@@ -486,7 +681,7 @@
             📡 You're offline • Reminders will show in-app
         </div>
 
-        <!-- In-App Notification (Offline Alert) -->
+        <!-- In-App Notification -->
         <div class="inapp-notification" id="inappNotification">
             <div class="inapp-notification-icon">🔔</div>
             <div class="inapp-notification-content">
@@ -497,147 +692,203 @@
         </div>
 
         <div class="app-container">
+            <!-- Status Bar -->
             <div class="status-bar">
-                <span>✨ Pillowy</span>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span id="pendingCount" style="display: none;">
+                <div class="status-left">
+                    <span>✨</span>
+                    <span>Pillowy</span>
+                </div>
+                <div class="status-right">
+                    <span class="pending-badge-container" id="pendingCount" style="display: none;">
                         <span class="pending-notification-badge" id="pendingBadge">0</span>
                     </span>
                     <span>🌸</span>
                 </div>
             </div>
 
-            <!-- HOME Page -->
-            <div id="homePage" class="page active-page">
-                <div class="streak-card">
-                    <div>🌸 CURRENT STREAK 🌸</div>
-                    <div class="streak-number" id="streakValue">1</div>
-                    <div>Days of being amazing!</div>
-                </div>
-                
-                <!-- Pending Notifications Card (only shows when offline reminders exist) -->
-                <div id="pendingRemindersCard" class="reminder-card" style="display: none; background: rgba(227, 107, 94, 0.15);">
-                    <div>
-                        <div>📬 Pending Reminders</div>
-                        <div id="pendingRemindersList">No pending reminders</div>
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- HOME Page -->
+                <div id="homePage" class="page active-page">
+                    <div class="streak-card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 14px; opacity: 0.8;">🌸 CURRENT STREAK 🌸</div>
+                            <div class="streak-number" id="streakValue">1</div>
+                            <div style="font-size: 14px; margin-top: 4px;">Days of being amazing!</div>
+                        </div>
                     </div>
-                    <button id="sendPendingBtn" class="btn-outline" style="padding: 8px 16px;">Send Now</button>
-                </div>
-
-                <div class="section-title">
-                    <span>💨 Today's Puffs</span>
-                    <span class="view-all-link" id="viewAllLink">VIEW ALL</span>
-                </div>
-                <div class="reminder-card">
-                    <div>
-                        <div>🌞 MORNING ROUTINE</div>
-                        <div>Vitamin C boost</div>
-                    </div>
-                    <div class="reminder-time">08:30 AM</div>
-                </div>
-                <div class="reminder-card">
-                    <div>
-                        <div>🌸 Midday Check-in</div>
-                        <div>Gentle nudge</div>
-                    </div>
-                    <div class="reminder-time">12:00 PM</div>
-                </div>
-
-                <div>
-                    <button id="testNotifBtn" style="width: 100%">
-                        🔔 Test notification (works offline too!)
-                    </button>
-                </div>
-                <div id="notifyStatus" class="notification-perm" style="margin-top: 12px">
-                    <span>🔕 Notifications:</span>
-                    <span id="permBadge">⚠️ Not allowed</span>
-                    <button id="requestPermBtn" style="background: #b1826e">Enable</button>
-                </div>
-            </div>
-
-            <!-- FOCUS Page -->
-            <div id="focusPage" class="page">
-                <div style="text-align: center; margin-bottom: 12px">
-                    <span style="background: rgba(255, 230, 220, 0.6); padding: 6px 16px; border-radius: 40px;">🧘 FOCUS SESSION</span>
-                </div>
-                <div class="focus-card">
-                    <h2>Deep Dreaming</h2>
-                    <div class="preset-group">
-                        <button class="preset-btn" data-minutes="25">25 min</button>
-                        <button class="preset-btn" data-minutes="60">1 hour</button>
-                        <button class="preset-btn" data-minutes="120">2 hours</button>
-                    </div>
-                    <div class="timer-display" id="timerDisplay">25:00</div>
-                    <div class="marshie-message">🐻‍❄️ Marshie is having a cozy nap...</div>
-                    <div style="display: flex; gap: 12px; justify-content: center; margin-top: 8px;">
-                        <button id="startTimerBtn">▶ Start</button>
-                        <button id="resetTimerBtn" class="btn-outline">⟳ Reset</button>
-                    </div>
-                </div>
-                <div class="notification-perm" style="justify-content: center">
-                    <span>✨ timer works offline • notification shows in-app</span>
-                </div>
-            </div>
-
-            <!-- REWARDS Page -->
-            <div id="rewardsPage" class="page">
-                <div class="streak-card">
-                    <div><strong>CURRENT STREAK</strong></div>
-                    <div class="streak-number" id="streakRewardsValue">1</div>
-                    <div>Keep going! Unlock diamond badge at 21 days.</div>
-                </div>
-                <div class="section-title">📅 Streak Calendar</div>
-                <div id="calendarGrid" class="calendar-grid"></div>
-                <div class="badge-progress-container">
-                    🏆 Badge progress:
-                    <strong id="badgeProgress">1/21 days</strong>
-                </div>
-                <div style="margin-top: 24px">
-                    <button id="mockCompleteTodayBtn" style="width: 100%">
-                        ✨ Check-in today (streak +1)
-                    </button>
-                </div>
-                <div style="margin-top: 12px">
-                    <button id="resetStreakBtn" class="btn-outline" style="width: 100%">
-                        🔄 Reset Streak (Testing)
-                    </button>
-                </div>
-            </div>
-
-            <!-- SET Page -->
-            <div id="snoozePage" class="page">
-                <div class="glass-panel">
-                    <div style="font-size: 20px; margin-bottom: 12px">⏰ Custom Reminder</div>
-                    <label style="font-weight: 500">Hour (24h format)</label>
-                    <input type="number" id="customHour" placeholder="14" min="0" max="23" value="20" style="margin-bottom: 12px" />
-                    <label style="font-weight: 500">Minute</label>
-                    <input type="number" id="customMinute" placeholder="30" min="0" max="59" value="30" style="margin-bottom: 12px" />
-                    <label style="font-weight: 500">Notification content</label>
-                    <textarea id="customNotiText" rows="2" maxlength="100">Pillowy nudge: stay mindful ✨</textarea>
-                    <div style="font-size: 12px; color: #9b6b5e; margin-top: 4px" id="charCount">0/100</div>
                     
-                    <!-- Repeat option -->
-                    <label style="font-weight: 500; margin-top: 12px; display: block;">Repeat (optional)</label>
-                    <select id="repeatOption" style="width: 100%; padding: 12px; border-radius: 44px; background: rgba(255,245,240,0.8); border: 1px solid rgba(255,215,200,0.8); margin-bottom: 12px;">
-                        <option value="none">No repeat</option>
-                        <option value="daily">Daily</option>
-                        <option value="weekly">Weekly</option>
-                    </select>
+                    <!-- Pending Reminders Card -->
+                    <div id="pendingRemindersCard" class="reminder-card pending-reminders-card" style="display: none;">
+                        <div>
+                            <div style="font-weight: 600;">📬 Pending Reminders</div>
+                            <div id="pendingRemindersList" style="font-size: 13px; opacity: 0.8; margin-top: 4px;">No pending reminders</div>
+                        </div>
+                        <button id="sendPendingBtn" class="btn-outline btn-small">Send</button>
+                    </div>
+
+                    <div class="section-title">
+                        <span>💨 Today's Puffs</span>
+                        <span class="view-all-link" id="viewAllLink">VIEW ALL →</span>
+                    </div>
                     
-                    <button id="scheduleCustomNudgeBtn" style="margin-top: 16px; width: 100%">
-                        Set reminder (works offline!)
-                    </button>
-                    <div style="margin-top: 12px; font-size: 13px; opacity: 0.8">
-                        💡 Offline: Shows in-app • Online: Sends notification
+                    <div class="reminder-card">
+                        <div>
+                            <div style="font-weight: 600;">🌞 MORNING ROUTINE</div>
+                            <div style="font-size: 14px; opacity: 0.8;">Vitamin C boost</div>
+                        </div>
+                        <div class="reminder-time">08:30 AM</div>
+                    </div>
+                    
+                    <div class="reminder-card">
+                        <div>
+                            <div style="font-weight: 600;">🌸 Midday Check-in</div>
+                            <div style="font-size: 14px; opacity: 0.8;">Gentle nudge</div>
+                        </div>
+                        <div class="reminder-time">12:00 PM</div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <button id="testNotifBtn" class="btn-block">
+                            🔔 Test Notification
+                        </button>
+                    </div>
+                    
+                    <div class="notification-perm" style="margin-top: 16px;">
+                        <span>🔕 Notifications:</span>
+                        <span id="permBadge" style="font-weight: 500;">⚠️ Not allowed</span>
+                        <button id="requestPermBtn" class="btn-small" style="background: #b1826e;">Enable</button>
+                    </div>
+                </div>
+
+                <!-- FOCUS Page -->
+                <div id="focusPage" class="page">
+                    <div class="timer-container">
+                        <span class="timer-label">🧘 FOCUS SESSION</span>
+                    </div>
+                    
+                    <div class="focus-card">
+                        <h2 style="text-align: center; color: #5a3e36; margin-bottom: 8px;">Deep Dreaming</h2>
+                        
+                        <div class="preset-group">
+                            <button class="preset-btn" data-minutes="25">25 min</button>
+                            <button class="preset-btn" data-minutes="60">1 hour</button>
+                            <button class="preset-btn" data-minutes="120">2 hours</button>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <span class="timer-display" id="timerDisplay">25:00</span>
+                        </div>
+                        
+                        <div class="marshie-message">
+                            🐻‍❄️ Marshie is having a cozy nap...
+                        </div>
+                        
+                        <div class="timer-actions">
+                            <button id="startTimerBtn" style="flex: 2;">▶ Start</button>
+                            <button id="resetTimerBtn" class="btn-outline" style="flex: 1;">⟳ Reset</button>
+                        </div>
+                    </div>
+                    
+                    <div class="notification-perm" style="justify-content: center; margin-top: 12px;">
+                        <span style="opacity: 0.8;">✨ Timer works offline • Shows in-app</span>
+                    </div>
+                </div>
+
+                <!-- REWARDS Page -->
+                <div id="rewardsPage" class="page">
+                    <div class="streak-card">
+                        <div style="text-align: center;">
+                            <div style="font-size: 14px; opacity: 0.8;">CURRENT STREAK</div>
+                            <div class="streak-number" id="streakRewardsValue">1</div>
+                            <div style="font-size: 13px; margin-top: 8px;">Keep going! Unlock diamond badge at 21 days.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">📅 Streak Calendar</div>
+                    <div id="calendarGrid" class="calendar-grid"></div>
+                    
+                    <div class="badge-progress-container">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🏆</div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">Badge Progress</div>
+                        <strong id="badgeProgress" style="font-size: 18px; color: #e36b5e;">1/21 days</strong>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button id="mockCompleteTodayBtn" class="btn-block">
+                            ✨ Check-in Today (+1 Streak)
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 12px;">
+                        <button id="resetStreakBtn" class="btn-outline btn-block">
+                            🔄 Reset Streak (Testing)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SET Page -->
+                <div id="snoozePage" class="page">
+                    <div class="glass-panel">
+                        <div style="font-size: 22px; margin-bottom: 20px; font-weight: 600; color: #5a3e36;">
+                            ⏰ Custom Reminder
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                            <div style="flex: 1;">
+                                <label class="form-label">Hour (24h)</label>
+                                <input type="number" id="customHour" placeholder="14" min="0" max="23" value="20" />
+                            </div>
+                            <div style="flex: 1;">
+                                <label class="form-label">Minute</label>
+                                <input type="number" id="customMinute" placeholder="30" min="0" max="59" value="30" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea id="customNotiText" rows="2" maxlength="100">Pillowy nudge: stay mindful ✨</textarea>
+                            <div class="char-counter" id="charCount">0/100</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Repeat (optional)</label>
+                            <select id="repeatOption">
+                                <option value="none">No repeat</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                            </select>
+                        </div>
+                        
+                        <button id="scheduleCustomNudgeBtn" class="btn-block" style="margin-top: 20px;">
+                            Set Reminder (Works Offline!)
+                        </button>
+                        
+                        <div style="margin-top: 16px; font-size: 13px; opacity: 0.7; text-align: center;">
+                            💡 Offline: Shows in-app • Online: Sends notification
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Tab Bar -->
             <div class="tab-bar">
-                <button class="tab-item active" data-page="homePage"><span class="tab-icon">🏠</span><span>TODAY</span></button>
-                <button class="tab-item" data-page="focusPage"><span class="tab-icon">⏱️</span><span>TIMER</span></button>
-                <button class="tab-item" data-page="rewardsPage"><span class="tab-icon">🎁</span><span>REWARDS</span></button>
-                <button class="tab-item" data-page="snoozePage"><span class="tab-icon">😴</span><span>SET</span></button>
+                <button class="tab-item active" data-page="homePage">
+                    <span class="tab-icon">🏠</span>
+                    <span>TODAY</span>
+                </button>
+                <button class="tab-item" data-page="focusPage">
+                    <span class="tab-icon">⏱️</span>
+                    <span>TIMER</span>
+                </button>
+                <button class="tab-item" data-page="rewardsPage">
+                    <span class="tab-icon">🎁</span>
+                    <span>REWARDS</span>
+                </button>
+                <button class="tab-item" data-page="snoozePage">
+                    <span class="tab-icon">😴</span>
+                    <span>SET</span>
+                </button>
             </div>
         </div>
 
@@ -647,7 +898,7 @@
             (function () {
                 "use strict";
 
-                // ===== OFFLINE NOTIFICATION SYSTEM =====
+                // ===== OFFLINE NOTIFICATION MANAGER =====
                 class OfflineNotificationManager {
                     constructor() {
                         this.pendingNotifications = this.loadPending();
@@ -663,20 +914,17 @@
                     }
 
                     init() {
-                        // Close in-app notification
                         document.getElementById('closeInappNotification')?.addEventListener('click', () => {
                             this.hideInAppNotification();
                         });
 
-                        // Send pending button
                         document.getElementById('sendPendingBtn')?.addEventListener('click', () => {
                             this.sendAllPending();
                         });
 
-                        // Auto-send when online
                         window.addEventListener('online', () => {
                             if (this.pendingNotifications.length > 0) {
-                                showToast(`📬 Sending ${this.pendingNotifications.length} pending notifications...`, 2000);
+                                showToast(`📬 Sending ${this.pendingNotifications.length} pending...`, 2000);
                                 this.sendAllPending();
                             }
                         });
@@ -709,7 +957,6 @@
                         this.pendingNotifications.push(notification);
                         this.savePending();
                         
-                        // Show immediately if it's time
                         if (!scheduledTime || new Date(scheduledTime) <= new Date()) {
                             this.showInAppNotification(title, body);
                             this.vibrate();
@@ -735,9 +982,7 @@
                             if (Notification.permission === 'granted') {
                                 try {
                                     new Notification(notification.title, { body: notification.body });
-                                } catch (e) {
-                                    console.warn('Failed to send:', e);
-                                }
+                                } catch (e) {}
                             }
                             this.removePending(notification.id);
                         });
@@ -756,10 +1001,7 @@
                         this.inappBody.textContent = body;
                         this.inappEl.classList.add('show');
                         
-                        // Auto-hide after 5 seconds
-                        setTimeout(() => {
-                            this.hideInAppNotification();
-                        }, 5000);
+                        setTimeout(() => this.hideInAppNotification(), 5000);
                     }
 
                     hideInAppNotification() {
@@ -786,8 +1028,8 @@
                         if (this.pendingCard) {
                             if (count > 0) {
                                 this.pendingCard.style.display = 'flex';
-                                const listText = this.pendingNotifications.slice(0, 3).map(n => n.title).join(', ');
-                                this.pendingList.textContent = listText + (count > 3 ? ` and ${count - 3} more` : '');
+                                const listText = this.pendingNotifications.slice(0, 2).map(n => n.title).join(', ');
+                                this.pendingList.textContent = listText + (count > 2 ? ` +${count - 2} more` : '');
                             } else {
                                 this.pendingCard.style.display = 'none';
                             }
@@ -803,7 +1045,6 @@
                                 if (scheduled <= now) {
                                     this.showInAppNotification(notification.title, notification.body);
                                     this.vibrate();
-                                    // Remove after showing
                                     this.removePending(notification.id);
                                 }
                             }
@@ -811,38 +1052,26 @@
                     }
                 }
 
-                // Initialize notification manager
                 const notifManager = new OfflineNotificationManager();
-                
-                // Check scheduled notifications every minute
-                setInterval(() => {
-                    notifManager.checkScheduledNotifications();
-                }, 60000);
+                setInterval(() => notifManager.checkScheduledNotifications(), 30000);
 
-                // ===== SMART NOTIFICATION FUNCTION =====
+                // ===== SMART NOTIFICATION =====
                 function sendSmartNotification(title, body, scheduledTime = null) {
                     if (navigator.onLine && Notification.permission === 'granted') {
-                        // Online: Send system notification
                         try {
                             new Notification(title, { body: body });
                             showToast(`📬 ${title}`, 1500);
                             return true;
                         } catch (e) {
-                            // Fallback to in-app
                             notifManager.showInAppNotification(title, body);
                             notifManager.vibrate();
                             return false;
                         }
                     } else {
-                        // Offline: Queue for later + show in-app
                         notifManager.addPending(title, body, scheduledTime);
                         notifManager.showInAppNotification(title, body);
                         notifManager.vibrate();
-                        
-                        const message = scheduledTime 
-                            ? `💾 Reminder saved • Will notify at ${new Date(scheduledTime).toLocaleTimeString()}`
-                            : '💾 Saved offline • Will show in-app';
-                        showToast(message, 3000);
+                        showToast('💾 Saved offline • Will show in-app', 2500);
                         return false;
                     }
                 }
@@ -858,19 +1087,26 @@
                 const timerDisplayEl = document.getElementById("timerDisplay");
 
                 // ===== OFFLINE BANNER =====
+                function updateOnlineStatus() {
+                    const banner = document.getElementById('offlineBanner');
+                    if (navigator.onLine) {
+                        banner?.classList.remove('show');
+                    } else {
+                        banner?.classList.add('show');
+                    }
+                }
+
                 window.addEventListener('online', () => {
-                    document.getElementById('offlineBanner')?.classList.remove('show');
+                    updateOnlineStatus();
                     showToast('📡 Back online!', 1500);
                 });
 
                 window.addEventListener('offline', () => {
-                    document.getElementById('offlineBanner')?.classList.add('show');
-                    showToast('📴 Offline mode • Reminders work in-app', 2500);
+                    updateOnlineStatus();
+                    showToast('📴 Offline mode', 2000);
                 });
 
-                if (!navigator.onLine) {
-                    document.getElementById('offlineBanner')?.classList.add('show');
-                }
+                updateOnlineStatus();
 
                 // ===== STREAK LOGIC =====
                 function loadStreakData() {
@@ -882,7 +1118,7 @@
                     if (lastCheckinStr) {
                         const lastDate = new Date(lastCheckinStr);
                         lastDate.setHours(0, 0, 0, 0);
-                        const daysDiff = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+                        const daysDiff = Math.floor((todayDate.getTime() - lastDate.getTime()) / 86400000);
                         
                         if (daysDiff > 1) {
                             currentStreak = 1;
@@ -967,8 +1203,6 @@
 
                     updateStreakUI();
                     showToast(`🎉 Check-in! Streak: ${currentStreak} days`, 2000);
-
-                    // Send notification using smart system
                     sendSmartNotification("Pillowy Reminders", `✨ Day ${currentStreak} completed! Keep glowing.`);
                 }
 
@@ -1009,7 +1243,7 @@
                             showToast("🔔 Notifications enabled!");
                             sendSmartNotification("Pillowy Reminders", "Cozy reminders active 🌸");
                         } else {
-                            showToast("⚠️ Permission denied • In-app notifications still work");
+                            showToast("⚠️ Permission denied • In-app still works");
                         }
                     });
                 }
@@ -1055,12 +1289,15 @@
                             updateTimerUI();
                         }
                     }, 1000);
+                    
+                    showToast(`⏱️ Timer started • ${activePreset} minutes`, 1500);
                 }
 
                 function resetFocusTimer() {
                     stopTimer();
                     focusSecondsRemaining = activePreset * 60;
                     updateTimerUI();
+                    showToast('⟲ Timer reset', 1000);
                 }
 
                 // ===== CUSTOM REMINDER =====
@@ -1095,25 +1332,18 @@
                         return;
                     }
 
-                    // Schedule the notification
                     setTimeout(() => {
                         sendSmartNotification("⏰ Custom Reminder", customMsg, target.toISOString());
                         
-                        // Handle repeat
                         if (repeatOption === "daily") {
                             const nextDay = new Date(target);
                             nextDay.setDate(nextDay.getDate() + 1);
-                            const repeatDelay = nextDay.getTime() - new Date().getTime();
-                            
-                            setTimeout(() => {
-                                scheduleCustomReminder(); // Recurring
-                            }, repeatDelay);
+                            setTimeout(() => scheduleCustomReminder(), nextDay.getTime() - new Date().getTime());
                         }
                     }, delay);
 
                     const timeStr = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
-                    const offlineMsg = navigator.onLine ? '' : ' (offline mode)';
-                    showToast(`⏰ Reminder set for ${timeStr}${offlineMsg}`, 3000);
+                    showToast(`⏰ Reminder set for ${timeStr}`, 3000);
                 }
 
                 // ===== UI HELPERS =====

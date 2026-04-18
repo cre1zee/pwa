@@ -85,7 +85,18 @@
                 100% { transform: translate(-30px, -40px) scale(1.25); opacity: 0.7; }
             }
 
-            /* ===== MAIN CONTAINER - CENTERED & RESPONSIVE ===== */
+            /* ===== FIREWORKS CANVAS ===== */
+            #fireworksCanvas {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 9999;
+            }
+
+            /* ===== MAIN CONTAINER ===== */
             .app-container {
                 width: 100%;
                 max-width: 500px;
@@ -155,7 +166,7 @@
                 box-shadow: 0 2px 8px rgba(227, 107, 94, 0.3);
             }
 
-            /* ===== MAIN CONTENT AREA - SCROLLABLE ===== */
+            /* ===== MAIN CONTENT AREA ===== */
             .content-area {
                 flex: 1;
                 overflow-y: auto;
@@ -165,7 +176,6 @@
                 -webkit-overflow-scrolling: touch;
             }
 
-            /* Hide scrollbar but keep functionality */
             .content-area::-webkit-scrollbar {
                 width: 0;
                 background: transparent;
@@ -503,84 +513,7 @@
                 font-size: 24px;
             }
 
-            /* ===== NOTIFICATIONS & BANNERS ===== */
-            .offline-banner {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                background: rgba(227, 107, 94, 0.95);
-                color: white;
-                text-align: center;
-                padding: 10px;
-                font-size: 13px;
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                z-index: 100;
-                transform: translateY(-100%);
-                transition: transform 0.3s;
-                font-weight: 500;
-            }
-
-            .offline-banner.show {
-                transform: translateY(0);
-            }
-
-            .inapp-notification {
-                position: absolute;
-                top: 60px;
-                left: 16px;
-                right: 16px;
-                background: rgba(255, 250, 245, 0.98);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border-radius: 24px;
-                padding: 16px 18px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-                border: 1px solid rgba(227, 107, 94, 0.3);
-                z-index: 99;
-                transform: translateY(-150%);
-                transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-                display: flex;
-                align-items: center;
-                gap: 14px;
-            }
-
-            .inapp-notification.show {
-                transform: translateY(0);
-            }
-
-            .inapp-notification-icon {
-                font-size: 36px;
-            }
-
-            .inapp-notification-content {
-                flex: 1;
-            }
-
-            .inapp-notification-title {
-                font-weight: 700;
-                color: #e36b5e;
-                margin-bottom: 4px;
-                font-size: 16px;
-            }
-
-            .inapp-notification-body {
-                font-size: 14px;
-                color: #5a3e36;
-                opacity: 0.9;
-            }
-
-            .inapp-notification-close {
-                background: none;
-                border: none;
-                font-size: 22px;
-                cursor: pointer;
-                color: #999;
-                padding: 8px;
-                box-shadow: none;
-            }
-
+            /* ===== TOAST ===== */
             .toast-msg {
                 position: fixed;
                 bottom: 100px;
@@ -599,9 +532,6 @@
                 max-width: 85%;
                 text-align: center;
                 box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
             }
 
             /* ===== UTILITIES ===== */
@@ -647,7 +577,7 @@
                 text-align: right;
             }
 
-            /* ===== RESPONSIVE FIXES ===== */
+            /* ===== RESPONSIVE ===== */
             @media (max-width: 400px) {
                 .app-container {
                     border-radius: 32px;
@@ -676,20 +606,8 @@
         </style>
     </head>
     <body>
-        <!-- Offline Banner -->
-        <div class="offline-banner" id="offlineBanner">
-            📡 You're offline • Reminders will show in-app
-        </div>
-
-        <!-- In-App Notification -->
-        <div class="inapp-notification" id="inappNotification">
-            <div class="inapp-notification-icon">🔔</div>
-            <div class="inapp-notification-content">
-                <div class="inapp-notification-title" id="inappTitle">Reminder</div>
-                <div class="inapp-notification-body" id="inappBody">Time to take a break!</div>
-            </div>
-            <button class="inapp-notification-close" id="closeInappNotification">✕</button>
-        </div>
+        <!-- Fireworks Canvas -->
+        <canvas id="fireworksCanvas"></canvas>
 
         <div class="app-container">
             <!-- Status Bar -->
@@ -898,13 +816,154 @@
             (function () {
                 "use strict";
 
-                // ===== OFFLINE NOTIFICATION MANAGER =====
+                // ===== FIREWORKS EFFECT =====
+                class Fireworks {
+                    constructor(canvasId) {
+                        this.canvas = document.getElementById(canvasId);
+                        this.ctx = this.canvas.getContext('2d');
+                        this.particles = [];
+                        this.animationFrame = null;
+                        this.resizeCanvas();
+                        
+                        window.addEventListener('resize', () => this.resizeCanvas());
+                    }
+
+                    resizeCanvas() {
+                        this.canvas.width = window.innerWidth;
+                        this.canvas.height = window.innerHeight;
+                    }
+
+                    createParticles(x, y) {
+                        const colors = ['#FF6B6B', '#FF8E8E', '#FFB3B3', '#FFD4D4', '#FFE4E4', '#FFD700', '#FFA500', '#FF69B4', '#FF1493', '#FF4500'];
+                        const particleCount = 80;
+                        
+                        for (let i = 0; i < particleCount; i++) {
+                            const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.5;
+                            const speed = 3 + Math.random() * 8;
+                            const size = 3 + Math.random() * 6;
+                            const color = colors[Math.floor(Math.random() * colors.length)];
+                            
+                            this.particles.push({
+                                x: x,
+                                y: y,
+                                vx: Math.cos(angle) * speed * (0.5 + Math.random()),
+                                vy: Math.sin(angle) * speed * (0.5 + Math.random()),
+                                size: size,
+                                color: color,
+                                alpha: 1,
+                                gravity: 0.15,
+                                decay: 0.015 + Math.random() * 0.02,
+                                trail: []
+                            });
+                        }
+                        
+                        // Thêm vài hạt đặc biệt (sparkles)
+                        for (let i = 0; i < 30; i++) {
+                            const angle = Math.random() * Math.PI * 2;
+                            const speed = 5 + Math.random() * 12;
+                            
+                            this.particles.push({
+                                x: x,
+                                y: y,
+                                vx: Math.cos(angle) * speed,
+                                vy: Math.sin(angle) * speed,
+                                size: 2 + Math.random() * 4,
+                                color: '#FFD700',
+                                alpha: 1,
+                                gravity: 0.1,
+                                decay: 0.01,
+                                sparkle: true,
+                                trail: []
+                            });
+                        }
+                    }
+
+                    start() {
+                        const centerX = this.canvas.width / 2;
+                        const centerY = this.canvas.height / 2 - 50;
+                        
+                        // Tạo 3 chùm pháo hoa
+                        this.createParticles(centerX - 80, centerY + 50);
+                        setTimeout(() => this.createParticles(centerX + 80, centerY + 30), 100);
+                        setTimeout(() => this.createParticles(centerX, centerY - 20), 200);
+                        setTimeout(() => this.createParticles(centerX - 40, centerY + 80), 300);
+                        setTimeout(() => this.createParticles(centerX + 40, centerY + 80), 400);
+                        
+                        this.animate();
+                        
+                        // Tự động dừng sau 3 giây
+                        setTimeout(() => this.stop(), 3500);
+                    }
+
+                    animate() {
+                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                        
+                        let hasActiveParticles = false;
+                        
+                        for (let i = this.particles.length - 1; i >= 0; i--) {
+                            const p = this.particles[i];
+                            
+                            // Update position
+                            p.x += p.vx;
+                            p.y += p.vy;
+                            p.vy += p.gravity;
+                            p.vx *= 0.99;
+                            p.vy *= 0.99;
+                            p.alpha -= p.decay;
+                            
+                            // Draw particle
+                            if (p.alpha > 0) {
+                                hasActiveParticles = true;
+                                
+                                this.ctx.save();
+                                this.ctx.globalAlpha = p.alpha;
+                                this.ctx.shadowColor = p.color;
+                                this.ctx.shadowBlur = p.sparkle ? 20 : 10;
+                                
+                                // Draw main particle
+                                this.ctx.beginPath();
+                                this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                                this.ctx.fillStyle = p.color;
+                                this.ctx.fill();
+                                
+                                // Draw sparkle effect
+                                if (p.sparkle) {
+                                    this.ctx.shadowBlur = 30;
+                                    this.ctx.beginPath();
+                                    this.ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
+                                    this.ctx.fillStyle = '#FFFFFF';
+                                    this.ctx.fill();
+                                }
+                                
+                                this.ctx.restore();
+                            } else {
+                                this.particles.splice(i, 1);
+                            }
+                        }
+                        
+                        if (hasActiveParticles) {
+                            this.animationFrame = requestAnimationFrame(() => this.animate());
+                        } else {
+                            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                        }
+                    }
+
+                    stop() {
+                        if (this.animationFrame) {
+                            cancelAnimationFrame(this.animationFrame);
+                            this.animationFrame = null;
+                        }
+                        this.particles = [];
+                        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    }
+                }
+
+                const fireworks = new Fireworks('fireworksCanvas');
+
+                // ===== OFFLINE NOTIFICATION MANAGER (Simplified - No in-app popup) =====
                 class OfflineNotificationManager {
                     constructor() {
                         this.pendingNotifications = this.loadPending();
-                        this.inappEl = document.getElementById('inappNotification');
-                        this.inappTitle = document.getElementById('inappTitle');
-                        this.inappBody = document.getElementById('inappBody');
                         this.pendingBadge = document.getElementById('pendingBadge');
                         this.pendingCount = document.getElementById('pendingCount');
                         this.pendingCard = document.getElementById('pendingRemindersCard');
@@ -914,10 +973,6 @@
                     }
 
                     init() {
-                        document.getElementById('closeInappNotification')?.addEventListener('click', () => {
-                            this.hideInAppNotification();
-                        });
-
                         document.getElementById('sendPendingBtn')?.addEventListener('click', () => {
                             this.sendAllPending();
                         });
@@ -957,11 +1012,6 @@
                         this.pendingNotifications.push(notification);
                         this.savePending();
                         
-                        if (!scheduledTime || new Date(scheduledTime) <= new Date()) {
-                            this.showInAppNotification(title, body);
-                            this.vibrate();
-                        }
-                        
                         return notification;
                     }
 
@@ -994,26 +1044,6 @@
                         this.savePending();
                     }
 
-                    showInAppNotification(title, body) {
-                        if (!this.inappEl) return;
-                        
-                        this.inappTitle.textContent = title;
-                        this.inappBody.textContent = body;
-                        this.inappEl.classList.add('show');
-                        
-                        setTimeout(() => this.hideInAppNotification(), 5000);
-                    }
-
-                    hideInAppNotification() {
-                        this.inappEl?.classList.remove('show');
-                    }
-
-                    vibrate() {
-                        if (navigator.vibrate) {
-                            navigator.vibrate([200, 100, 200]);
-                        }
-                    }
-
                     updateUI() {
                         const count = this.pendingNotifications.length;
                         
@@ -1043,8 +1073,6 @@
                             if (notification.scheduledTime) {
                                 const scheduled = new Date(notification.scheduledTime);
                                 if (scheduled <= now) {
-                                    this.showInAppNotification(notification.title, notification.body);
-                                    this.vibrate();
                                     this.removePending(notification.id);
                                 }
                             }
@@ -1063,15 +1091,11 @@
                             showToast(`📬 ${title}`, 1500);
                             return true;
                         } catch (e) {
-                            notifManager.showInAppNotification(title, body);
-                            notifManager.vibrate();
                             return false;
                         }
                     } else {
                         notifManager.addPending(title, body, scheduledTime);
-                        notifManager.showInAppNotification(title, body);
-                        notifManager.vibrate();
-                        showToast('💾 Saved offline • Will show in-app', 2500);
+                        showToast('💾 Saved offline • Will send when online', 2500);
                         return false;
                     }
                 }
@@ -1085,28 +1109,6 @@
                 let focusSecondsRemaining = 25 * 60;
                 let activePreset = 25;
                 const timerDisplayEl = document.getElementById("timerDisplay");
-
-                // ===== OFFLINE BANNER =====
-                function updateOnlineStatus() {
-                    const banner = document.getElementById('offlineBanner');
-                    if (navigator.onLine) {
-                        banner?.classList.remove('show');
-                    } else {
-                        banner?.classList.add('show');
-                    }
-                }
-
-                window.addEventListener('online', () => {
-                    updateOnlineStatus();
-                    showToast('📡 Back online!', 1500);
-                });
-
-                window.addEventListener('offline', () => {
-                    updateOnlineStatus();
-                    showToast('📴 Offline mode', 2000);
-                });
-
-                updateOnlineStatus();
 
                 // ===== STREAK LOGIC =====
                 function loadStreakData() {
@@ -1202,6 +1204,10 @@
                     localStorage.setItem("pillowyStreak_glassy_v2", currentStreak);
 
                     updateStreakUI();
+                    
+                    // 🎆 HIỆU ỨNG PHÁO HOA KHI CHECK-IN THÀNH CÔNG
+                    fireworks.start();
+                    
                     showToast(`🎉 Check-in! Streak: ${currentStreak} days`, 2000);
                     sendSmartNotification("Pillowy Reminders", `✨ Day ${currentStreak} completed! Keep glowing.`);
                 }
@@ -1243,7 +1249,7 @@
                             showToast("🔔 Notifications enabled!");
                             sendSmartNotification("Pillowy Reminders", "Cozy reminders active 🌸");
                         } else {
-                            showToast("⚠️ Permission denied • In-app still works");
+                            showToast("⚠️ Permission denied");
                         }
                     });
                 }
@@ -1403,7 +1409,7 @@
                     document.getElementById("resetStreakBtn")?.addEventListener("click", resetStreak);
                     document.getElementById("scheduleCustomNudgeBtn")?.addEventListener("click", scheduleCustomReminder);
                     document.getElementById("testNotifBtn")?.addEventListener("click", () => {
-                        sendSmartNotification("Pillowy Test 💊", "This works offline too! 🌸");
+                        sendSmartNotification("Pillowy Test 💊", "This is a test notification! 🌸");
                     });
                     document.getElementById("requestPermBtn")?.addEventListener("click", requestNotificationPermission);
                     document.getElementById("viewAllLink")?.addEventListener("click", () => switchPage("rewardsPage"));

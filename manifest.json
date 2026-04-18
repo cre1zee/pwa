@@ -1,13 +1,14 @@
 {
     "name": "Pillowy Reminders",
     "short_name": "Pillowy",
-    "description": "Cozy reminders & focus timer with pastel glass design",
+    "description": "Cozy reminders & focus timer with pastel glass design • Works offline",
     "theme_color": "#fbc4d2",
     "background_color": "#ffe4ec",
     "display": "standalone",
     "orientation": "portrait",
     "scope": "/",
-    "start_url": "/",
+    "start_url": "/?utm_source=pwa",
+    "id": "pillowy-app-v1",
     "icons": [
         {
             "src": "/icon-48.png",
@@ -35,6 +36,11 @@
             "type": "image/png"
         },
         {
+            "src": "/icon-180.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
             "src": "/icon-192.png",
             "sizes": "192x192",
             "type": "image/png",
@@ -45,6 +51,49 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot-home.png",
+            "sizes": "1170x2532",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Home screen with streak"
+        },
+        {
+            "src": "/screenshot-timer.png",
+            "sizes": "1170x2532",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Focus timer"
+        }
+    ],
+    "categories": ["productivity", "lifestyle", "health"],
+    "shortcuts": [
+        {
+            "name": "Start Focus",
+            "short_name": "Focus",
+            "description": "Start a 25-minute focus session",
+            "url": "/?action=focus",
+            "icons": [
+                {
+                    "src": "/icon-96.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "Check-in",
+            "short_name": "Check-in",
+            "description": "Mark today as complete",
+            "url": "/?action=checkin",
+            "icons": [
+                {
+                    "src": "/icon-96.png",
+                    "sizes": "96x96"
+                }
+            ]
         }
     ]
 }
